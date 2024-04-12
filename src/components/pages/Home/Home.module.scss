@@ -1,0 +1,21 @@
+@use 'style/_variable' as *;
+
+.page {
+  position: relative;
+}
+
+.body {
+  padding: 2rem 1rem;
+}
+
+.title {
+  text-align: center;
+}
+
+.paragraph {
+  margin: 1rem auto 0;
+}
+
+.link {
+  text-align: center;
+}
