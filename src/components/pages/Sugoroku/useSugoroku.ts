@@ -1,7 +1,10 @@
+import { useState } from 'react'
+
 export const useSugoroku = () => {
-  const hoge = 'hoge'
+  const [currentStep, setCurrentStep] = useState<number>(0)
 
   return {
-    hoge,
+    currentStep,
+    setCurrentStep,
   }
 }
