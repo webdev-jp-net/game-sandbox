@@ -5,6 +5,7 @@ import { FC } from 'react'
 
 import { usePageTitle } from 'hooks/usePageTitle'
 
+import { RollDice } from './components/RollDice/RollDice.tsx'
 import styles from './Sugoroku.module.scss'
 import { useSugoroku } from './useSugoroku.ts'
 
@@ -19,7 +20,7 @@ export const Sugoroku: FC = () => {
     <>
       <div className={styles.sugoroku}>
         <>Sugoroku</>
-        <p>{hoge}</p>
+        <RollDice />
       </div>
     </>
   )
