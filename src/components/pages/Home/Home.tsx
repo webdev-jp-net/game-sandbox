@@ -23,9 +23,6 @@ export const Home: FC = () => {
         <p className={styles.paragraph}>ここへページの内容を表示</p>
         <p className={styles.paragraph}>{userId}</p>
         <p className={styles.paragraph}>
-          <Link to="/sub/1">1のページへ移動</Link>
-        </p>
-        <p className={styles.paragraph}>
           <Link to="/sugoroku">Sugoroku</Link>
         </p>
       </div>
