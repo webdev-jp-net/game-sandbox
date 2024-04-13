@@ -1,11 +1,11 @@
 {
-  "name": "react-ts-liff",
-  "description": "LIFFアプリケーションを開発するプロジェクトのサンプル",
-  "version": "2.0.0",
+  "name": "game-sandbox",
+  "description": "ゲームのプロトタイプを作る場所",
+  "version": "0.1.0",
   "private": false,
   "repository": {
     "type": "git",
-    "url": "git@github.com:webdev-jp-net/react-ts-liff.git"
+    "url": "git@github.com:webdev-jp-net/game-sandbox.git"
   },
   "author": "webdev",
   "license": "UNLICENSED",
