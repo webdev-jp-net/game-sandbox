@@ -11,7 +11,7 @@ import styles from './Sugoroku.module.scss'
 import { useSugoroku } from './useSugoroku.ts'
 
 export const Sugoroku: FC = () => {
-  const { fieldStep, currentStep, integrationRollResult } = useSugoroku()
+  const { fieldStep, currentStep, integrationRollResult, reset } = useSugoroku()
 
   usePageTitle(`Sugoroku`)
 
@@ -21,7 +21,7 @@ export const Sugoroku: FC = () => {
         <>Sugoroku</>
         <div>
           {fieldStep === currentStep ? (
-            <Button onClick={() => window.location.reload()}>もういちどあそぶ</Button>
+            <Button onClick={reset}>もういちどあそぶ</Button>
           ) : (
             <RollDice integrationRollResult={integrationRollResult} />
           )}

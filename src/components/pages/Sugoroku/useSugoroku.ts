@@ -15,10 +15,16 @@ export const useSugoroku = () => {
     })
   }
 
+  // リセット処理
+  const reset = () => {
+    setCurrentStep(0)
+  }
+
   return {
     fieldStep,
     currentStep,
     setCurrentStep,
     integrationRollResult,
+    reset,
   }
 }
