@@ -1,0 +1,21 @@
+@use "style/_variable" as *;
+
+.progressBoard {
+  position: relative;
+}
+
+.list {
+  display: grid;
+  gap: 0.1rem;
+  place-items: center;
+  padding: 0.5rem;
+  background-color: lightgray;
+}
+
+.item {
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  background-color: white;
+}

@@ -1,9 +1,10 @@
 import { FC } from 'react'
 
+import { usePageTitle } from 'hooks/usePageTitle'
+
+import { ProgressBoard } from './components/ProgressBoard'
 // import { useSelector } from 'react-redux'
 // import { RootState } from 'store'
-
-import { usePageTitle } from 'hooks/usePageTitle'
 
 import { RollDice } from './components/RollDice/RollDice.tsx'
 import styles from './Sugoroku.module.scss'
@@ -21,6 +22,7 @@ export const Sugoroku: FC = () => {
       <div className={styles.sugoroku}>
         <>Sugoroku</>
         <RollDice />
+        <ProgressBoard />
       </div>
     </>
   )
