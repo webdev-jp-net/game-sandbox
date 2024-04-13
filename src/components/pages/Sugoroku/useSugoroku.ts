@@ -7,11 +7,15 @@ export const useSugoroku = () => {
   // コマの現在地
   const [currentStep, setCurrentStep] = useState<number>(0)
 
-  //
+  // 抽選処理
+  const integrationRollResult = (addStep: number) => {
+    setCurrentStep(prev => prev + addStep)
+  }
 
   return {
     fieldStep,
     currentStep,
     setCurrentStep,
+    integrationRollResult,
   }
 }

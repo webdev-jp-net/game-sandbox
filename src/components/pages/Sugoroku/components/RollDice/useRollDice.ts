@@ -1,10 +1,10 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 type useRollDiceProps = {
-  setCurrentStep: (step: number) => void
+  integrationRollResult: (step: number) => void
 }
 
-export const useRollDice = ({ setCurrentStep }: useRollDiceProps) => {
+export const useRollDice = ({ integrationRollResult }: useRollDiceProps) => {
   // 抽選毛化
   const [dice, setDice] = useState<number>(0)
 
@@ -12,8 +12,12 @@ export const useRollDice = ({ setCurrentStep }: useRollDiceProps) => {
   const actRoll = () => {
     const result = Math.floor(Math.random() * 6) + 1
     setDice(result)
-    setCurrentStep(prev => prev + result)
   }
+
+  // diceに変化があった場合にactRollを実行
+  useEffect(() => {
+    integrationRollResult(dice)
+  }, [dice])
 
   return {
     dice,

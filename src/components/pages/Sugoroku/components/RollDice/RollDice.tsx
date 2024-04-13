@@ -8,13 +8,13 @@ import styles from './RollDice.module.scss'
 
 type RollDiceProps = {
   addClass?: string[]
-  setCurrentStep: (step: number) => void
+  integrationRollResult: (step: number) => void
 }
 
-export const RollDice: FC<RollDiceProps> = ({ setCurrentStep, addClass = [] }) => {
+export const RollDice: FC<RollDiceProps> = ({ integrationRollResult, addClass = [] }) => {
   const customClass = Array.isArray(addClass) ? addClass : [addClass]
 
-  const { dice, actRoll } = useRollDice({ setCurrentStep })
+  const { dice, actRoll } = useRollDice({ integrationRollResult })
 
   return (
     <div className={[styles.rollDice, ...customClass].join(' ')}>
