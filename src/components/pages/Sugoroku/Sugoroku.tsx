@@ -19,12 +19,14 @@ export const Sugoroku: FC = () => {
     <>
       <div className={styles.sugoroku}>
         <>Sugoroku</>
-        {fieldStep === currentStep ? (
-          <Button onClick={() => window.location.reload()}>もういちどあそぶ</Button>
-        ) : (
-          <RollDice integrationRollResult={integrationRollResult} />
-        )}
-        <ProgressBoard fieldStep={fieldStep} currentStep={currentStep} />
+        <div>
+          {fieldStep === currentStep ? (
+            <Button onClick={() => window.location.reload()}>もういちどあそぶ</Button>
+          ) : (
+            <RollDice integrationRollResult={integrationRollResult} />
+          )}
+          <ProgressBoard fieldStep={fieldStep} currentStep={currentStep} />
+        </div>
       </div>
     </>
   )

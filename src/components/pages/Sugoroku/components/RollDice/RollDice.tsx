@@ -17,8 +17,8 @@ export const RollDice: FC<RollDiceProps> = ({ integrationRollResult, addClass = 
   const { dice, actRoll } = useRollDice({ integrationRollResult })
 
   return (
-    <div className={[styles.rollDice, ...customClass].join(' ')}>
-      <p>{dice}</p> <Button onClick={actRoll}>さいころをふる</Button>
-    </div>
+    <span className={[styles.rollDice, ...customClass].join(' ')}>
+      <Button onClick={actRoll}>さいころをふる</Button> <span>{dice > 1 && `${dice}がでた`}</span>
+    </span>
   )
 }
