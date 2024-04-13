@@ -11,21 +11,17 @@ type ProgressBoardProps = {
 export const ProgressBoard: FC<ProgressBoardProps> = ({ children, addClass = [] }) => {
   const customClass = Array.isArray(addClass) ? addClass : [addClass]
 
-  const { fieldStep, fieldStepArray, currentStep } = useProgressBoard()
+  const { fieldStepArray, currentStep } = useProgressBoard()
 
   return (
     <div className={[styles.progressBoard, ...customClass].join(' ')}>
-      <p>
-        {fieldStep} /{currentStep}
-      </p>
       <div className={styles.list}>
-        <div className={styles.item}>START</div>
-        {fieldStepArray.map((_, index) => (
+        {fieldStepArray.map((item, index) => (
           <div key={index} className={styles.item}>
-            {index + 1}
+            <span className={styles.label}>{item}</span>
+            {currentStep === index && <span className={styles.player}></span>}
           </div>
         ))}
-        <div className={styles.item}>GOAL</div>
       </div>
     </div>
   )

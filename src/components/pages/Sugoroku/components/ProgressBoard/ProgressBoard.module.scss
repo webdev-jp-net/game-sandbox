@@ -13,9 +13,22 @@
 }
 
 .item {
+  position: relative;
   display: grid;
   place-items: center;
   width: 12rem;
   height: 3rem;
   background-color: white;
+}
+
+
+.player {
+  position: absolute;
+  inset:0;
+  display: block;
+  width: 1.5rem;
+  height: 1.5rem;
+  margin: auto;
+  background-color: rgb(255 0 0 / 50%);
+  border-radius: 50%;
 }
