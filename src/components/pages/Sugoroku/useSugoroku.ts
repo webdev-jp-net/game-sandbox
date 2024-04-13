@@ -9,7 +9,10 @@ export const useSugoroku = () => {
 
   // 抽選処理
   const integrationRollResult = (addStep: number) => {
-    setCurrentStep(prev => prev + addStep)
+    setCurrentStep(prev => {
+      const nextStep = prev + addStep
+      return nextStep > fieldStep ? fieldStep : nextStep
+    })
   }
 
   return {
