@@ -9,6 +9,7 @@ export default {
 
 export const Basic: StoryObj<typeof ProgressBoard> = {
   args: {
+    fieldStep: 10,
     currentStep: 0,
   },
 }

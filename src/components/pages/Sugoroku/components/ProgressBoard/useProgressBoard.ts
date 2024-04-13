@@ -1,7 +1,8 @@
-export const useProgressBoard = () => {
-  // ゴールまでのステップ数
-  const fieldStep = 10
+type useProgressBoardProps = {
+  fieldStep: number
+}
 
+export const useProgressBoard = ({ fieldStep }: useProgressBoardProps) => {
   // fieldStepの数だけ、indexが入る配列
   const fieldStepArray = new Array(fieldStep + 1)
     .fill(null)
