@@ -1,16 +1,19 @@
 import { action } from '@storybook/addon-actions'
-import type { ComponentMeta, ComponentStory } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react'
 
 import { Button } from './Button'
 
 export default {
-  title: 'parts/link button/Button',
+  title: 'button/Button',
   component: Button,
+} as Meta
+
+export const Basic: StoryObj<typeof Button> = {
   args: {
-    disabled: false,
-    addClass: [],
-    handleClick: action('click'),
     children: 'ボタン',
+    variant: 'basic',
+    onClick: action('click'),
+    type: 'button',
+    disabled: false,
   },
-} as ComponentMeta<typeof Button>
-export const Basic: ComponentStory<typeof Button> = args => <Button {...args}></Button>
+}
