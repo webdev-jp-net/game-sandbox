@@ -1,0 +1,1 @@
+export { Sugoroku } from './Sugoroku'
