@@ -9,7 +9,7 @@ import styles from './Sugoroku.module.scss'
 import { useSugoroku } from './useSugoroku.ts'
 
 export const Sugoroku: FC = () => {
-  const { hoge } = useSugoroku()
+  const { currentStep, setCurrentStep } = useSugoroku()
 
   usePageTitle(`Sugoroku`)
 
@@ -18,7 +18,7 @@ export const Sugoroku: FC = () => {
       <div className={styles.sugoroku}>
         <>Sugoroku</>
         <RollDice />
-        <ProgressBoard />
+        <ProgressBoard currentStep={currentStep} />
       </div>
     </>
   )
