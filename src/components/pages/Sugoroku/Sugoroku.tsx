@@ -17,7 +17,8 @@ export const Sugoroku: FC = () => {
     <>
       <div className={styles.sugoroku}>
         <>Sugoroku</>
-        <RollDice />
+        <p>{currentStep}</p>
+        <RollDice setCurrentStep={setCurrentStep} />
         <ProgressBoard currentStep={currentStep} />
       </div>
     </>
