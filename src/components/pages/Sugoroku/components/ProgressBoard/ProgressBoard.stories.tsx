@@ -8,5 +8,8 @@ export default {
 } as Meta
 
 export const Basic: StoryObj<typeof ProgressBoard> = {
-  args: {},
+  args: {
+    fieldStep: 10,
+    currentStep: 0,
+  },
 }

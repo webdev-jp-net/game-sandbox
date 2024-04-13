@@ -5,13 +5,19 @@ import { useProgressBoard } from './useProgressBoard'
 import styles from './ProgressBoard.module.scss'
 
 type ProgressBoardProps = {
+  fieldStep: number
+  currentStep: number
   addClass?: string[]
 }
 
-export const ProgressBoard: FC<ProgressBoardProps> = ({ children, addClass = [] }) => {
+export const ProgressBoard: FC<ProgressBoardProps> = ({
+  fieldStep,
+  currentStep,
+  addClass = [],
+}) => {
   const customClass = Array.isArray(addClass) ? addClass : [addClass]
 
-  const { fieldStepArray, currentStep } = useProgressBoard()
+  const { fieldStepArray } = useProgressBoard({ fieldStep })
 
   return (
     <div className={[styles.progressBoard, ...customClass].join(' ')}>

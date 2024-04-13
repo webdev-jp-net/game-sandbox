@@ -4,12 +4,14 @@ import { usePageTitle } from 'hooks/usePageTitle'
 
 import { ProgressBoard } from './components/ProgressBoard'
 
+import { Button } from 'components/parts/Button'
+
 import { RollDice } from './components/RollDice/RollDice.tsx'
 import styles from './Sugoroku.module.scss'
 import { useSugoroku } from './useSugoroku.ts'
 
 export const Sugoroku: FC = () => {
-  const { hoge } = useSugoroku()
+  const { fieldStep, currentStep, integrationRollResult, reset } = useSugoroku()
 
   usePageTitle(`Sugoroku`)
 
@@ -17,8 +19,14 @@ export const Sugoroku: FC = () => {
     <>
       <div className={styles.sugoroku}>
         <>Sugoroku</>
-        <RollDice />
-        <ProgressBoard />
+        <div>
+          {fieldStep === currentStep ? (
+            <Button onClick={reset}>もういちどあそぶ</Button>
+          ) : (
+            <RollDice integrationRollResult={integrationRollResult} />
+          )}
+          <ProgressBoard fieldStep={fieldStep} currentStep={currentStep} />
+        </div>
       </div>
     </>
   )
