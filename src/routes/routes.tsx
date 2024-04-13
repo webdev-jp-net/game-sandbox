@@ -8,7 +8,6 @@ import { Layout } from 'components/layout/Layout'
 
 import { Home } from 'components/pages/Home'
 import { NotFound } from 'components/pages/NotFound'
-import { Sub } from 'components/pages/Sub'
 import { Sugoroku } from 'components/pages/Sugoroku'
 
 import { authenticatedRouter } from './authenticated'
@@ -29,7 +28,6 @@ export const App: FC = () => {
         },
         unAuthRouter,
         authenticatedRouter,
-        { path: '/sub/:id', element: <Sub /> },
         { path: '/sugoroku', element: <Sugoroku /> },
       ],
     },
