@@ -19,6 +19,10 @@
   width: 12rem;
   height: 3rem;
   background-color: white;
+
+  &.--event {
+    box-shadow: inset 0 0 0 0.1rem lightseagreen;
+  }
 }
 
 

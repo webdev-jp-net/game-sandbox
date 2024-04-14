@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 
 export const useSugoroku = () => {
   // チェックインイベントのあるマスの数
@@ -8,8 +8,41 @@ export const useSugoroku = () => {
   // スタートの次のマスがゴールになると必ずゲームが終わる。可視化されているマスの数 + GOAL（1マス）の値が最低限必要なステップ数
   const minFieldStep = checkInEvent + 1
 
-  // このコース
+  // このコースの長さ
   const [fieldStep, setFieldStep] = useState<number>(minFieldStep)
+
+  /**
+   * @description コースのステップ数へのチェックポイントを均等に割り当てる
+   * @param N
+   * @param checkpoints
+   * @returns boolean[]
+   */
+  const assignCheckpoints = (N: number, checkpoints: number): Set<number> => {
+    const interval = N / checkpoints
+    const result = new Set<number>()
+
+    for (let i = 0; i < checkpoints; i++) {
+      result.add(Math.round(i * interval))
+    }
+    return result
+  }
+
+  // イベントがあるマスを均等に配置する場合の位置情報
+  const fieldEvent = useMemo((): Set<number> => {
+    // スタートとゴールの間へ設置するポイントの数
+    // fieldStepにはゴールを含んでいるので、ゴールを除いた数だけイベントを設置可能なマスがある
+    const showFieldStep = fieldStep - 1
+
+    // コースのステップ数へのチェックポイントを均等に割り当てる
+    const interval = showFieldStep / checkInEvent
+    const result = new Set<number>()
+
+    for (let i = 0; i < checkInEvent; i++) {
+      result.add(Math.round(i * interval))
+    }
+
+    return result
+  }, [fieldStep, checkInEvent])
 
   // コマの現在地
   const [currentStep, setCurrentStep] = useState<number>(0)
@@ -39,6 +72,7 @@ export const useSugoroku = () => {
   return {
     minFieldStep,
     fieldStep,
+    fieldEvent,
     setFieldStep,
     currentStep,
     dice,
