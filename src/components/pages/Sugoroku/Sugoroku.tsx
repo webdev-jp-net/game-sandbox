@@ -6,12 +6,11 @@ import { ProgressBoard } from './components/ProgressBoard'
 
 import { Button } from 'components/parts/Button'
 
-import { RollDice } from './components/RollDice/RollDice.tsx'
 import styles from './Sugoroku.module.scss'
 import { useSugoroku } from './useSugoroku.ts'
 
 export const Sugoroku: FC = () => {
-  const { fieldStep, currentStep, integrationRollResult, reset } = useSugoroku()
+  const { fieldStep, currentStep, dice, actRoll, reset } = useSugoroku()
 
   usePageTitle(`Sugoroku`)
 
@@ -23,8 +22,9 @@ export const Sugoroku: FC = () => {
           {fieldStep === currentStep ? (
             <Button onClick={reset}>もういちどあそぶ</Button>
           ) : (
-            <RollDice integrationRollResult={integrationRollResult} />
+            <Button onClick={actRoll}>さいころをふる</Button>
           )}
+          <span className={styles.rollResult}>{dice >= 1 && `${dice}がでた`}</span>
           <ProgressBoard fieldStep={fieldStep} currentStep={currentStep} />
         </div>
       </div>
