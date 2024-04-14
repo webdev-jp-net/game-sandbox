@@ -37,7 +37,7 @@ export const Sugoroku: FC = () => {
           )}
           <span className={styles.rollResult}>{dice >= 1 && `${dice}がでた`}</span>
         </div>
-        <ProgressBoard currentStep={currentStep} course={course} />
+        <ProgressBoard fieldStep={fieldStep} currentStep={currentStep} course={course} />
       </div>
       <div>
         <Button onClick={reset}>あたらしくゲームをはじめる</Button>
