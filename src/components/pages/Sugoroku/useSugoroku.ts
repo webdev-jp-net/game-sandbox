@@ -1,9 +1,12 @@
 import { useState } from 'react'
 
 export const useSugoroku = () => {
+  // チェックインイベントのあるマスの数
+  const checkInEvent = 8
+
   // ゴールまでのステップ数の下限
-  // スタートの次のマスがゴールになると必ずゲームが終わるので、最低でも2
-  const minFieldStep = 2
+  // スタートの次のマスがゴールになると必ずゲームが終わる。可視化されているマスの数 + GOAL（1マス）の値が最低限必要なステップ数
+  const minFieldStep = checkInEvent + 1
 
   // ゴールまでのステップ数
   const [fieldStep, setFieldStep] = useState<number>(minFieldStep)
