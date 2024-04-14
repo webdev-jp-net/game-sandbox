@@ -34,6 +34,15 @@
     box-shadow: inset 0 0 0 99rem lightseagreen;
 
   }
+
+  // ゴールするまで、GOALは透過（それまでは同じ位置に重なっているSTARTが可視状態）
+  &:last-child {
+    opacity: 0;
+
+    &:has(.player) {
+      opacity: 1;
+    }
+  }
 }
 
 
