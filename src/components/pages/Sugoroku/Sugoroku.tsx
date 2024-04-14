@@ -35,8 +35,11 @@ export const Sugoroku: FC = () => {
             <Button onClick={actRoll}>さいころをふる</Button>
           )}
           <span className={styles.rollResult}>{dice >= 1 && `${dice}がでた`}</span>
-          <ProgressBoard fieldStep={fieldStep} currentStep={currentStep} />
         </div>
+        <ProgressBoard fieldStep={fieldStep} currentStep={currentStep} />
+      </div>
+      <div>
+        <Button onClick={reset}>あたらしくゲームをはじめる</Button>
       </div>
     </>
   )
