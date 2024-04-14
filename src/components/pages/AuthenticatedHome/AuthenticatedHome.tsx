@@ -6,12 +6,9 @@ import { FC } from 'react'
 import { usePageTitle } from 'hooks/usePageTitle'
 
 import styles from './AuthenticatedHome.module.scss'
-import { useAuthenticatedHome } from './useAuthenticatedHome.ts'
 
 export const AuthenticatedHome: FC = () => {
   // const { fuga } = useSelector((state: RootState) => state.hoge)
-
-  const { hoge } = useAuthenticatedHome()
 
   usePageTitle(`AuthenticatedHome`)
 

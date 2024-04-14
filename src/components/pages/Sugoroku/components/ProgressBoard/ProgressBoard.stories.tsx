@@ -9,8 +9,61 @@ export default {
 
 export const Basic: StoryObj<typeof ProgressBoard> = {
   args: {
+    course: [
+      {
+        event: null,
+      },
+      {
+        event: {
+          checkIn: false,
+        },
+      },
+      {
+        event: {
+          checkIn: true,
+        },
+      },
+      {
+        event: null,
+      },
+      {
+        event: {
+          checkIn: false,
+        },
+      },
+      {
+        event: {
+          checkIn: true,
+        },
+      },
+      {
+        event: {
+          checkIn: true,
+        },
+      },
+      {
+        event: {
+          checkIn: true,
+        },
+      },
+      {
+        event: null,
+      },
+      {
+        event: {
+          checkIn: false,
+        },
+      },
+      {
+        event: {
+          checkIn: false,
+        },
+      },
+      {
+        event: null,
+      },
+    ],
     fieldStep: 10,
     currentStep: 0,
-    fieldEvent: new Set([0, 1, 2, 3, 5, 6, 7, 8]),
   },
 }

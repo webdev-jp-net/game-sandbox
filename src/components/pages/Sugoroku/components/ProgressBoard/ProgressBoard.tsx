@@ -20,6 +20,8 @@ export const ProgressBoard: FC<ProgressBoardProps> = ({
   const customClass = Array.isArray(addClass) ? addClass : [addClass]
   const { fieldStepPosition } = useProgressBoard({ fieldStep })
 
+  console.log({ course })
+
   return (
     <div className={[styles.progressBoard, ...customClass].join(' ')}>
       <div className={styles.list}>
