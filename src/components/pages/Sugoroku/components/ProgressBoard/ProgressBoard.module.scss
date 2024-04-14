@@ -20,7 +20,7 @@
   height: 3rem;
   background-color: white;
   border-radius: 50%;
-  transform: color 250ms ease-in-out, box-shadow 500ms ease-in-out;
+  transition: color 250ms ease-in-out, box-shadow 500ms ease-in-out;
 
   // イベントあり
   &.--event {
