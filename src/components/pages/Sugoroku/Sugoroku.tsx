@@ -10,7 +10,7 @@ import styles from './Sugoroku.module.scss'
 import { useSugoroku } from './useSugoroku.ts'
 
 export const Sugoroku: FC = () => {
-  const { minFieldStep, fieldStep, fieldEvent, setFieldStep, currentStep, dice, actRoll, reset } =
+  const { minFieldStep, fieldStep, course, setFieldStep, currentStep, dice, actRoll, reset } =
     useSugoroku()
 
   usePageTitle(`Sugoroku`)
@@ -37,7 +37,7 @@ export const Sugoroku: FC = () => {
           )}
           <span className={styles.rollResult}>{dice >= 1 && `${dice}がでた`}</span>
         </div>
-        <ProgressBoard fieldStep={fieldStep} currentStep={currentStep} fieldEvent={fieldEvent} />
+        <ProgressBoard currentStep={currentStep} course={course} />
       </div>
       <div>
         <Button onClick={reset}>あたらしくゲームをはじめる</Button>

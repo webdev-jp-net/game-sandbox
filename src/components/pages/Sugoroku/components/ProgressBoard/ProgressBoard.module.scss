@@ -19,9 +19,18 @@
   width: 12rem;
   height: 3rem;
   background-color: white;
+  transform: color 250ms ease-in-out, box-shadow 500ms ease-in-out;
 
+  // イベントあり
   &.--event {
     box-shadow: inset 0 0 0 0.1rem lightseagreen;
+  }
+
+  // チェックイン済み
+  &.--checkIn {
+    color: white;
+    box-shadow: inset 0 0 0 99rem lightseagreen;
+
   }
 }
 
