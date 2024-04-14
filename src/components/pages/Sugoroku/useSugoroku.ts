@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
 
 export const useSugoroku = () => {
   // チェックインイベントのあるマスの数
@@ -59,6 +59,9 @@ export const useSugoroku = () => {
   // 抽選結果
   const [dice, setDice] = useState<number>(0)
 
+  // クリア判定
+  const [isFinish, setIsFinish] = useState<boolean>(false)
+
   // さいころをふる
   const actRoll = () => {
     // ランダムに1から6のランダムな整数を返す
@@ -70,7 +73,10 @@ export const useSugoroku = () => {
       // 目的地
       const nextStep = prev + addStep
       // ゴールを超えた場合はゴールに到達
-      const finalStep = nextStep > fieldStep ? fieldStep : nextStep
+      // const finalStep = nextStep > fieldStep ? fieldStep : nextStep
+
+      // ゴールを超えた場合はスタートに戻り超えた分だけ進む
+      const finalStep = nextStep > fieldStep - 1 ? nextStep - fieldStep : nextStep
 
       // 目的地にイベントがある場合はイベントを発生させる
       if (course[finalStep].event) {
@@ -79,6 +85,11 @@ export const useSugoroku = () => {
           setCourse(prev => {
             const update = [...prev]
             update[finalStep] = { event: { checkIn: true } }
+
+            // 全てのチェックインが完了しているならばゲームクリア
+            setIsFinish(
+              checkInEventCount === update.filter(item => item.event?.checkIn === true).length
+            )
             return update
           })
         }
@@ -93,6 +104,7 @@ export const useSugoroku = () => {
     setCurrentStep(0)
     setDice(0)
     setCourse(setEventTarget())
+    setIsFinish(false)
   }
 
   return {
@@ -105,6 +117,7 @@ export const useSugoroku = () => {
     currentStep,
     dice,
     actRoll,
+    isFinish,
     reset,
   }
 }

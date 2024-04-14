@@ -10,8 +10,17 @@ import styles from './Sugoroku.module.scss'
 import { useSugoroku } from './useSugoroku.ts'
 
 export const Sugoroku: FC = () => {
-  const { minFieldStep, fieldStep, course, setFieldStep, currentStep, dice, actRoll, reset } =
-    useSugoroku()
+  const {
+    minFieldStep,
+    fieldStep,
+    course,
+    setFieldStep,
+    currentStep,
+    dice,
+    actRoll,
+    isFinish,
+    reset,
+  } = useSugoroku()
 
   usePageTitle(`Sugoroku`)
 
@@ -33,7 +42,7 @@ export const Sugoroku: FC = () => {
           ステップ
         </div>
         <div>
-          {fieldStep === currentStep ? (
+          {isFinish ? (
             <Button onClick={reset}>もういちどあそぶ</Button>
           ) : (
             <Button onClick={actRoll}>さいころをふる</Button>
