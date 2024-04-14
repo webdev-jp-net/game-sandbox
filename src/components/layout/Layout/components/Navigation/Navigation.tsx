@@ -19,7 +19,11 @@ export const Navigation: FC<NavigationProps> = ({ addClass = [] }) => {
   return (
     <div className={[styles.navigation, ...customClass].join(' ')}>
       {list.map((item, index) => (
-        <Link key={index} to={item.url} className={pathname === item.url ? styles.active : ''}>
+        <Link
+          key={index}
+          to={item.url}
+          className={`${styles.link} ${pathname === item.url ? styles.active : ''}`}
+        >
           {item.label}
         </Link>
       ))}
