@@ -4,11 +4,11 @@ export const useSugoroku = () => {
   // チェックインイベントのあるマスの数
   const checkInEvent = 8
 
-  // ゴールまでのステップ数の下限
+  // このコースの下限
   // スタートの次のマスがゴールになると必ずゲームが終わる。可視化されているマスの数 + GOAL（1マス）の値が最低限必要なステップ数
   const minFieldStep = checkInEvent + 1
 
-  // ゴールまでのステップ数
+  // このコース
   const [fieldStep, setFieldStep] = useState<number>(minFieldStep)
 
   // コマの現在地
