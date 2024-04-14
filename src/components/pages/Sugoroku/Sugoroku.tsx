@@ -25,6 +25,7 @@ export const Sugoroku: FC = () => {
             value={fieldStep}
             min={minFieldStep}
             onChange={e => setFieldStep(Number(e.target.value))}
+            disabled={currentStep > 0}
           />
         </div>
         <div>
