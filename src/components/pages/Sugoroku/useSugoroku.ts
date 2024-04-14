@@ -1,8 +1,12 @@
 import { useState } from 'react'
 
 export const useSugoroku = () => {
+  // ゴールまでのステップ数の下限
+  // スタートの次のマスがゴールになると必ずゲームが終わるので、最低でも2
+  const minFieldStep = 2
+
   // ゴールまでのステップ数
-  const fieldStep = 10
+  const [fieldStep, setFieldStep] = useState<number>(minFieldStep)
 
   // コマの現在地
   const [currentStep, setCurrentStep] = useState<number>(0)
@@ -30,7 +34,9 @@ export const useSugoroku = () => {
   }
 
   return {
+    minFieldStep,
     fieldStep,
+    setFieldStep,
     currentStep,
     dice,
     actRoll,
