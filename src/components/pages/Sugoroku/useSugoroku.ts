@@ -11,22 +11,6 @@ export const useSugoroku = () => {
   // このコースの長さ
   const [fieldStep, setFieldStep] = useState<number>(minFieldStep)
 
-  /**
-   * @description コースのステップ数へのチェックポイントを均等に割り当てる
-   * @param N
-   * @param checkpoints
-   * @returns boolean[]
-   */
-  const assignCheckpoints = (N: number, checkpoints: number): Set<number> => {
-    const interval = N / checkpoints
-    const result = new Set<number>()
-
-    for (let i = 0; i < checkpoints; i++) {
-      result.add(Math.round(i * interval))
-    }
-    return result
-  }
-
   // イベントがあるマスを均等に配置する場合の位置情報
   const fieldEvent = useMemo((): Set<number> => {
     // スタートとゴールの間へ設置するポイントの数
