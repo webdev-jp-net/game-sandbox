@@ -10,7 +10,7 @@ import styles from './Sugoroku.module.scss'
 import { useSugoroku } from './useSugoroku.ts'
 
 export const Sugoroku: FC = () => {
-  const { fieldStep, currentStep, dice, actRoll, reset } = useSugoroku()
+  const { minFieldStep, fieldStep, setFieldStep, currentStep, dice, actRoll, reset } = useSugoroku()
 
   usePageTitle(`Sugoroku`)
 
@@ -18,6 +18,15 @@ export const Sugoroku: FC = () => {
     <>
       <div className={styles.sugoroku}>
         <>Sugoroku</>
+        <div>
+          <input
+            type="number"
+            step="1"
+            value={fieldStep}
+            min={minFieldStep}
+            onChange={e => setFieldStep(Number(e.target.value))}
+          />
+        </div>
         <div>
           {fieldStep === currentStep ? (
             <Button onClick={reset}>もういちどあそぶ</Button>
