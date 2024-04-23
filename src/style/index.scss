@@ -8,6 +8,12 @@
 html {
   height: 100%;
   font-size: vw(16); // 幅375pxのアートボードで16px相当
+  @media screen and (min-width: 430px) {
+    max-width: 430px;
+    margin: 0 auto;
+    font-size: 18.3467px;
+    background-color: gray;
+  }
 }
 
 body {
@@ -23,6 +29,7 @@ body {
   font-size: 1rem; // 幅375pxのアートボードで16px相当
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: white;
 
   // 背後をスクロールさせない
   &.--isFixedScroll {
