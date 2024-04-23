@@ -1,0 +1,298 @@
+{
+  "a": [
+    {
+        "event": null,
+        "empty": false
+    },
+    {
+        "event": null,
+        "empty": true
+    },
+    {
+        "event": null,
+        "empty": false
+    },
+    {
+        "event": null,
+        "empty": false
+    },
+    {
+        "event": {
+            "checkIn": false
+        },
+        "empty": false
+    },
+    {
+        "event": null,
+        "empty": false
+    },
+    {
+        "event": null,
+        "empty": true
+    },
+    {
+        "event": null,
+        "empty": false
+    },
+    {
+        "event": null,
+        "empty": false
+    },
+    {
+        "event": null,
+        "empty": true
+    },
+    {
+        "event": null,
+        "empty": false
+    },
+    {
+        "event": null,
+        "empty": true
+    },
+    {
+        "event": {
+            "checkIn": false
+        },
+        "empty": false
+    },
+    {
+        "event": null,
+        "empty": true
+    },
+    {
+        "event": null,
+        "empty": false
+    },
+    {
+        "event": null,
+        "empty": false
+    },
+    {
+        "event": null,
+        "empty": false
+    }
+  ],
+  "b": [
+    {
+        "event": null,
+        "empty": false
+    },
+    {
+        "event": null,
+        "empty": false
+    },
+    {
+        "event": {
+            "checkIn": false
+        },
+        "empty": false
+    },
+    {
+        "event": null,
+        "empty": false
+    },
+    {
+        "event": null,
+        "empty": true
+    },
+    {
+        "event": null,
+        "empty": false
+    },
+    {
+        "event": null,
+        "empty": true
+    },
+    {
+        "event": null,
+        "empty": false
+    },
+    {
+        "event": null,
+        "empty": true
+    },
+    {
+        "event": null,
+        "empty": false
+    },
+    {
+        "event": {
+            "checkIn": false
+        },
+        "empty": false
+    },
+    {
+        "event": null,
+        "empty": false
+    },
+    {
+        "event": null,
+        "empty": true
+    },
+    {
+        "event": null,
+        "empty": false
+    },
+    {
+        "event": null,
+        "empty": false
+    },
+    {
+        "event": null,
+        "empty": false
+    },
+    {
+        "event": null,
+        "empty": true
+    }
+  ],
+  "c": [
+    {
+        "event": null,
+        "empty": false
+    },
+    {
+        "event": null,
+        "empty": false
+    },
+    {
+        "event": null,
+        "empty": true
+    },
+    {
+        "event": null,
+        "empty": false
+    },
+    {
+        "event": null,
+        "empty": true
+    },
+    {
+        "event": null,
+        "empty": false
+    },
+    {
+        "event": {
+            "checkIn": false
+        },
+        "empty": false
+    },
+    {
+        "event": null,
+        "empty": false
+    },
+    {
+        "event": null,
+        "empty": true
+    },
+    {
+        "event": null,
+        "empty": false
+    },
+    {
+        "event": null,
+        "empty": true
+    },
+    {
+        "event": null,
+        "empty": false
+    },
+    {
+        "event": null,
+        "empty": false
+    },
+    {
+        "event": null,
+        "empty": true
+    },
+    {
+        "event": {
+            "checkIn": false
+        },
+        "empty": false
+    },
+    {
+        "event": null,
+        "empty": false
+    },
+    {
+        "event": null,
+        "empty": false
+    }
+  ],
+  "d": [
+    {
+        "event": {
+            "checkIn": false
+        },
+        "empty": false
+    },
+    {
+        "event": null,
+        "empty": false
+    },
+    {
+        "event": null,
+        "empty": false
+    },
+    {
+        "event": null,
+        "empty": false
+    },
+    {
+        "event": null,
+        "empty": true
+    },
+    {
+        "event": null,
+        "empty": false
+    },
+    {
+        "event": null,
+        "empty": true
+    },
+    {
+        "event": null,
+        "empty": false
+    },
+    {
+        "event": {
+            "checkIn": false
+        },
+        "empty": false
+    },
+    {
+        "event": null,
+        "empty": true
+    },
+    {
+        "event": null,
+        "empty": false
+    },
+    {
+        "event": null,
+        "empty": false
+    },
+    {
+        "event": null,
+        "empty": true
+    },
+    {
+        "event": null,
+        "empty": false
+    },
+    {
+        "event": null,
+        "empty": false
+    },
+    {
+        "event": null,
+        "empty": false
+    },
+    {
+        "event": null,
+        "empty": true
+    }
+  ]
+}

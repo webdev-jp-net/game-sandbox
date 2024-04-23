@@ -1,5 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 
+type CourseItem = { event: { checkIn: boolean } | null; empty: boolean }
+
 export const useLoop = () => {
   // チェックインイベントのあるマスの数
   const checkInEventCount = 2
@@ -16,18 +18,20 @@ export const useLoop = () => {
 
   // コース情報
   // 最初の要素0をスタートマスにするため、+1する
-  const [course, setCourse] = useState<{ event: { checkIn: boolean } | null }[]>(
-    new Array(fieldStep + 1).fill({ event: null })
+  const [course, setCourse] = useState<CourseItem[]>(
+    new Array(fieldStep + 1).fill({ event: null, empty: false })
   )
 
   // コースのステップ数へのチェックポイントを均等に割り当てる
   const setEventTarget = useCallback(() => {
     const eventTarget = new Set<number>([4, 12])
 
-    const updateCourse = new Array(fieldStep + 1).fill({ event: null }).map((item, index) => {
-      if (eventTarget.has(index)) return { event: { checkIn: false } }
-      return item
-    })
+    const updateCourse = new Array(fieldStep + 1)
+      .fill({ event: null, empty: false })
+      .map((item, index) => {
+        if (eventTarget.has(index)) return { event: { checkIn: false }, empty: false }
+        return item
+      })
 
     return updateCourse
   }, [fieldStep])

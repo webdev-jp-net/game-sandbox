@@ -2,6 +2,7 @@ import { FC } from 'react'
 
 import { useProgressBoard } from './useProgressBoard'
 
+import courseJson from './course.json'
 import styles from './ProgressBoard.module.scss'
 
 type ProgressBoardProps = {
@@ -20,10 +21,12 @@ export const ProgressBoard: FC<ProgressBoardProps> = ({
   const customClass = Array.isArray(addClass) ? addClass : [addClass]
   const { fieldStepPosition } = useProgressBoard({ fieldStep: 16 })
 
+  const { a, b, c, d } = courseJson
+
   return (
     <div className={[styles.progressBoard, ...customClass].join(' ')}>
       <div className={styles.list}>
-        {course.map((item, index) => {
+        {d.map((item, index) => {
           // const label = index === 0 ? 'START' : index === course.length - 1 ? 'GOAL' : index
 
           const itemClass = [styles.item]
@@ -32,16 +35,18 @@ export const ProgressBoard: FC<ProgressBoardProps> = ({
 
           const { x, y } = fieldStepPosition[index]
 
-          return (
-            <div
-              key={index}
-              className={[...itemClass].join(' ')}
-              style={{ transform: `translate(${x * 0.1}rem, ${y * 0.1}rem)` }}
-            >
-              <span className={styles.label}></span>
-              {currentStep === index && <span className={styles.player}></span>}
-            </div>
-          )
+          if (item.empty) return
+          else
+            return (
+              <div
+                key={index}
+                className={[...itemClass].join(' ')}
+                style={{ transform: `translate(${x * 0.1}rem, ${y * 0.1}rem)` }}
+              >
+                <span className={styles.label}></span>
+                {currentStep === index && <span className={styles.player}></span>}
+              </div>
+            )
         })}
       </div>
     </div>
