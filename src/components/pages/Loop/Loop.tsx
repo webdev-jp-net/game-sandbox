@@ -9,17 +9,7 @@ import styles from './Loop.module.scss'
 import { useLoop } from './useLoop.ts'
 
 export const Loop: FC = () => {
-  const {
-    minFieldStep,
-    fieldStep,
-    course,
-    setFieldStep,
-    currentStep,
-    dice,
-    actRoll,
-    isFinish,
-    reset,
-  } = useLoop()
+  const { fieldStep, course, currentStep, dice, actRoll, isFinish, reset } = useLoop()
 
   usePageTitle(`Loop`)
 
@@ -27,20 +17,7 @@ export const Loop: FC = () => {
     <>
       <div className={styles.Loop}>
         <>Loop</>
-        <div className={styles.fieldStep}>
-          ゴールまで
-          <input
-            className={styles.fieldStepInput}
-            type="number"
-            step="1"
-            value={fieldStep}
-            min={minFieldStep}
-            onChange={e => setFieldStep(Number(e.target.value))}
-            disabled={currentStep > 0}
-          />
-          ステップ
-        </div>
-        <div>
+        <div className={styles.header}>
           {isFinish ? (
             <Button onClick={reset}>もういちどあそぶ</Button>
           ) : (
@@ -50,7 +27,7 @@ export const Loop: FC = () => {
         </div>
         <ProgressBoard fieldStep={fieldStep} currentStep={currentStep} course={course} />
       </div>
-      <div>
+      <div className={styles.footer}>
         <Button onClick={reset}>あたらしくゲームをはじめる</Button>
       </div>
     </>

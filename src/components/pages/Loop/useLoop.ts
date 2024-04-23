@@ -2,14 +2,14 @@ import { useState, useEffect, useCallback } from 'react'
 
 export const useLoop = () => {
   // チェックインイベントのあるマスの数
-  const checkInEventCount = 8
+  const checkInEventCount = 2
   const [checkInEvent, setCheckInEvent] = useState<boolean[]>(
     new Array(checkInEventCount).fill(false)
   )
 
   // このコースの下限
   // 可視化されているマスの数 + GOAL（1マス）の値が最低限必要なステップ数
-  const minFieldStep = checkInEventCount + 1
+  const minFieldStep = 16
 
   // このコースの長さ
   const [fieldStep, setFieldStep] = useState<number>(minFieldStep)
@@ -22,12 +22,7 @@ export const useLoop = () => {
 
   // コースのステップ数へのチェックポイントを均等に割り当てる
   const setEventTarget = useCallback(() => {
-    // fieldStepにはゴールを含んでいるので、ゴールを除いた数だけイベントを設置可能なマスがある
-    const showFieldStep = fieldStep - 1
-
-    const interval = showFieldStep / checkInEventCount
-    const eventTarget = new Set<number>()
-    for (let i = 0; i < checkInEventCount; i++) eventTarget.add(Math.round(i * interval) + 1) // startが0なので+1する
+    const eventTarget = new Set<number>([4, 12])
 
     const updateCourse = new Array(fieldStep + 1).fill({ event: null }).map((item, index) => {
       if (eventTarget.has(index)) return { event: { checkIn: false } }

@@ -7,7 +7,19 @@
   padding: 0.5rem;
 }
 
-.fieldStepInput {
-  width: 3rem;
+
+.header {
+  display: grid;
+  place-content: center;
 }
 
+.rollResult {
+  padding: 0.5em;
+  text-align: center;
+}
+
+
+.footer {
+  display: grid;
+  place-content: center;
+}
