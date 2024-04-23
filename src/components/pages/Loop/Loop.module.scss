@@ -1,0 +1,13 @@
+@use "style/_variable" as *;
+
+.fieldStep {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  padding: 0.5rem;
+}
+
+.fieldStepInput {
+  width: 3rem;
+}
+
