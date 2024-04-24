@@ -11,7 +11,7 @@ export const useLoop = () => {
 
   // このコースの下限
   // 可視化されているマスの数 + GOAL（1マス）の値が最低限必要なステップ数
-  const minFieldStep = 16
+  const minFieldStep = 11
 
   // このコースの長さ
   const [fieldStep, setFieldStep] = useState<number>(minFieldStep)
@@ -22,9 +22,18 @@ export const useLoop = () => {
     new Array(fieldStep + 1).fill({ event: null, empty: false })
   )
 
+  // コース全体の中のイベント場所
+  // [1, 2, 4, 5, 7, 8, 10, 11] を4つのグループに分ける
+  const eventTargetAll = [
+    [1, 7],
+    [4, 8],
+    [2, 10],
+    [5, 11],
+  ]
+
   // コースのステップ数へのチェックポイントを均等に割り当てる
   const setEventTarget = useCallback(() => {
-    const eventTarget = new Set<number>([4, 12])
+    const eventTarget = new Set<number>([1, 2, 4, 5, 7, 8, 10, 11])
 
     const updateCourse = new Array(fieldStep + 1)
       .fill({ event: null, empty: false })
