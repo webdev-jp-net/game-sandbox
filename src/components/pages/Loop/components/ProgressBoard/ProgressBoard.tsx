@@ -35,18 +35,18 @@ export const ProgressBoard: FC<ProgressBoardProps> = ({
 
           const { x, y } = fieldStepPosition[index]
 
-          if (item.empty) return
-          else
-            return (
-              <div
-                key={index}
-                className={[...itemClass].join(' ')}
-                style={{ transform: `translate(${x * 0.1}rem, ${y * 0.1}rem)` }}
-              >
-                <span className={styles.label}>{label}</span>
-                {currentStep === index && <span className={styles.player}></span>}
-              </div>
-            )
+          // if (item.empty) return
+          // else
+          return (
+            <div
+              key={index}
+              className={[...itemClass].join(' ')}
+              style={{ transform: `translate(${x * 0.1}rem, ${y * 0.1}rem)` }}
+            >
+              <span className={styles.label}>{label}</span>
+              {currentStep === index && <span className={styles.player}></span>}
+            </div>
+          )
         })}
       </div>
     </div>

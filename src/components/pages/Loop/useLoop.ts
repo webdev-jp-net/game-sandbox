@@ -4,9 +4,9 @@ type CourseItem = { event: { checkIn: boolean } | null; empty: boolean }
 
 export const useLoop = () => {
   // チェックインイベントのあるマスの数
-  const checkInEventCount = 2
-  const [checkInEvent, setCheckInEvent] = useState<boolean[]>(
-    new Array(checkInEventCount).fill(false)
+  const checkInEventCount = 8
+  const [checkInEvent, setCheckInEvent] = useState<{ position: number; done: boolean }[]>(
+    new Array(checkInEventCount).fill({ position: 0, done: false })
   )
 
   // このコースの下限
@@ -14,7 +14,7 @@ export const useLoop = () => {
   const minFieldStep = 11
 
   // このコースの長さ
-  const [fieldStep, setFieldStep] = useState<number>(minFieldStep)
+  const [fieldStep, setFieldStep] = useState<number>(minFieldStep * 4)
 
   // コース情報
   // 最初の要素0をスタートマスにするため、+1する
@@ -24,16 +24,17 @@ export const useLoop = () => {
 
   // コース全体の中のイベント場所
   // [1, 2, 4, 5, 7, 8, 10, 11] を4つのグループに分ける
+  const eventTargetAllFlat = [2, 10, 4 + 11, 8 + 11, 1 + 22, 7 + 22, 5 + 33, 11 + 33]
   const eventTargetAll = [
-    [1, 7],
-    [4, 8],
     [2, 10],
+    [4, 8],
+    [1, 7],
     [5, 11],
   ]
 
   // コースのステップ数へのチェックポイントを均等に割り当てる
   const setEventTarget = useCallback(() => {
-    const eventTarget = new Set<number>([1, 2, 4, 5, 7, 8, 10, 11])
+    const eventTarget = new Set<number>(eventTargetAllFlat)
 
     const updateCourse = new Array(fieldStep + 1)
       .fill({ event: null, empty: false })
@@ -47,6 +48,16 @@ export const useLoop = () => {
 
   // イベントがあるマスを均等に配置する場合の位置情報
   useEffect(() => {
+    // イベントマスのコンディションを管理する箱へパラメータを割り当てる
+    eventTargetAllFlat.forEach((item, index) => {
+      setCheckInEvent(prev => {
+        const update = [...prev]
+        update[index] = { position: item, done: false }
+
+        return update
+      })
+    })
+
     // スタートとゴールの間へ設置するポイントの数
     // fieldStepにはゴールを含んでいるので、ゴールを除いた数だけイベントを設置可能なマスがある
     const showFieldStep = fieldStep - 1
@@ -79,7 +90,13 @@ export const useLoop = () => {
     // コマの現在地を進める
     setCurrentStep(prev => {
       // 目的地
-      const nextStep = prev + addStep
+      let nextStep = prev + addStep
+
+      // イベントがある場合は通り抜けない
+      // 最寄りのイベントマス座標
+      const nextEventTarget = eventTargetAllFlat.find(item => item > prev)
+      if (nextEventTarget && nextEventTarget < nextStep) nextStep = nextEventTarget
+
       // ゴールを超えた場合はゴールに到達
       // const finalStep = nextStep > fieldStep ? fieldStep : nextStep
 
