@@ -35,14 +35,14 @@
 
   }
 
-  // ゴールするまで、GOALは透過（それまでは同じ位置に重なっているSTARTが可視状態）
-  &:first-child {
-    opacity: 0;
+  // // ゴールするまで、GOALは透過（それまでは同じ位置に重なっているSTARTが可視状態）
+  // &:first-child {
+  //   opacity: 0;
 
-    &:has(.player) {
-      opacity: 1;
-    }
-  }
+  //   &:has(.player) {
+  //     opacity: 1;
+  //   }
+  // }
 }
 
 
@@ -56,4 +56,13 @@
   background-color: white;
   border-radius: 50%;
   mix-blend-mode: difference;
+}
+
+.lap {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 1.5rem;
+  margin: auto;
+  text-align: center;
 }

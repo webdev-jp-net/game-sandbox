@@ -19,19 +19,24 @@ export const ProgressBoard: FC<ProgressBoardProps> = ({
   addClass = [],
 }) => {
   const customClass = Array.isArray(addClass) ? addClass : [addClass]
-  const { fieldStepPosition } = useProgressBoard({ fieldStep })
+  const { fieldStepPosition, lap, currentCourse } = useProgressBoard({
+    fieldStep: 11,
+    course,
+    currentStep,
+  })
 
   // const { a, b, c, d } = courseJson
 
   return (
     <div className={[styles.progressBoard, ...customClass].join(' ')}>
+      <div className={styles.lap}>{lap + 1}周め</div>
       <div className={styles.list}>
-        {course.map((item, index) => {
+        {currentCourse.map((item, index) => {
           const label = index === 0 ? 'S' : index === course.length - 1 ? 'G' : index
 
           const itemClass = [styles.item]
           if (item.event !== null) itemClass.push(styles[`--event`])
-          if (item.event?.checkIn === true) itemClass.push(styles[`--checkIn`])
+          if (course[11 * lap + index].event?.checkIn === true) itemClass.push(styles[`--checkIn`])
 
           const { x, y } = fieldStepPosition[index]
 
@@ -43,8 +48,8 @@ export const ProgressBoard: FC<ProgressBoardProps> = ({
               className={[...itemClass].join(' ')}
               style={{ transform: `translate(${x * 0.1}rem, ${y * 0.1}rem)` }}
             >
-              <span className={styles.label}>{label}</span>
-              {currentStep === index && <span className={styles.player}></span>}
+              <span className={styles.label}>{11 * lap + index}</span>
+              {currentStep === index + 11 * lap && <span className={styles.player}></span>}
             </div>
           )
         })}
