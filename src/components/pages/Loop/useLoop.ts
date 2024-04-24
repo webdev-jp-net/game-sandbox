@@ -17,9 +17,8 @@ export const useLoop = () => {
   const [fieldStep, setFieldStep] = useState<number>(minFieldStep * 4)
 
   // コース情報
-  // 最初の要素0をスタートマスにするため、+1する
   const [course, setCourse] = useState<CourseItem[]>(
-    new Array(fieldStep + 1).fill({ event: null, empty: false })
+    new Array(fieldStep).fill({ event: null, empty: false })
   )
 
   // コース全体の中のイベント場所
@@ -60,7 +59,7 @@ export const useLoop = () => {
 
     // スタートとゴールの間へ設置するポイントの数
     // fieldStepにはゴールを含んでいるので、ゴールを除いた数だけイベントを設置可能なマスがある
-    const showFieldStep = fieldStep - 1
+    const showFieldStep = fieldStep
 
     // コースのステップ数へのチェックポイントを均等に割り当てる
     const interval = showFieldStep / checkInEventCount
@@ -92,16 +91,16 @@ export const useLoop = () => {
       // 目的地
       let nextStep = prev + addStep
 
-      // イベントがある場合は通り抜けない
+      // チェックポイントがある場合は通り抜けない
       // 最寄りのイベントマス座標
       const nextEventTarget = eventTargetAllFlat.find(item => item > prev)
       if (nextEventTarget && nextEventTarget < nextStep) nextStep = nextEventTarget
 
       // ゴールを超えた場合はゴールに到達
-      // const finalStep = nextStep > fieldStep ? fieldStep : nextStep
+      const finalStep = nextStep > fieldStep ? fieldStep : nextStep
 
-      // ゴールを超えた場合はスタートに戻り超えた分だけ進む
-      const finalStep = nextStep > fieldStep - 1 ? nextStep - fieldStep : nextStep
+      // // ゴールを超えた場合はスタートに戻り超えた分だけ進む
+      // const finalStep = nextStep > fieldStep - 1 ? nextStep - fieldStep : nextStep
 
       // 目的地にイベントがある場合はイベントを発生させる
       if (course[finalStep].event) {
@@ -109,7 +108,7 @@ export const useLoop = () => {
         if (course[finalStep].event !== null) {
           setCourse(prev => {
             const update = [...prev]
-            update[finalStep] = { event: { checkIn: true } }
+            update[finalStep] = { event: { checkIn: true }, empty: false }
 
             // 全てのチェックインが完了しているならばゲームクリア
             setIsFinish(

@@ -36,7 +36,7 @@
   }
 
   // ゴールするまで、GOALは透過（それまでは同じ位置に重なっているSTARTが可視状態）
-  &:last-child {
+  &:first-child {
     opacity: 0;
 
     &:has(.player) {

@@ -27,7 +27,7 @@ export const ProgressBoard: FC<ProgressBoardProps> = ({
     <div className={[styles.progressBoard, ...customClass].join(' ')}>
       <div className={styles.list}>
         {course.map((item, index) => {
-          const label = index === 0 ? 'START' : index === course.length - 1 ? 'GOAL' : index
+          const label = index === 0 ? 'S' : index === course.length - 1 ? 'G' : index
 
           const itemClass = [styles.item]
           if (item.event !== null) itemClass.push(styles[`--event`])
