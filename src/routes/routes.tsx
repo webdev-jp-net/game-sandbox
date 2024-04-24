@@ -7,6 +7,7 @@ import { useAuthLiff } from 'hooks/useAuthLiff'
 import { Layout } from 'components/layout/Layout'
 
 import { Home } from 'components/pages/Home'
+import { Loop } from 'components/pages/Loop'
 import { NotFound } from 'components/pages/NotFound'
 import { Sugoroku } from 'components/pages/Sugoroku'
 
@@ -29,6 +30,7 @@ export const App: FC = () => {
         unAuthRouter,
         authenticatedRouter,
         { path: '/sugoroku', element: <Sugoroku /> },
+        { path: '/loop', element: <Loop /> },
       ],
     },
   ])

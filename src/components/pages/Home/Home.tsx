@@ -14,16 +14,23 @@ export const Home: FC = () => {
   const { userId } = useSelector((state: RootState) => state.user)
 
   // ページタイトル
-  usePageTitle(`HOME`)
+  usePageTitle(`Game Sandbox`)
 
   return (
     <div className={styles.page}>
+      <div className={styles.header}>
+        <h1 className={styles.title}>Game Sandbox</h1>
+        <figure className={styles.figure}>
+          <img className={styles.image} src="/logo512.png" alt="" />
+        </figure>
+      </div>
       <div className={styles.body}>
-        <h1 className={styles.title}>Home</h1>
-        <p className={styles.paragraph}>ここへページの内容を表示</p>
         <p className={styles.paragraph}>{userId}</p>
         <p className={styles.paragraph}>
           <Link to="/sugoroku">Sugoroku</Link>
+        </p>
+        <p className={styles.paragraph}>
+          <Link to="/loop">周回すごろく</Link>
         </p>
       </div>
     </div>

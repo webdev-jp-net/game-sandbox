@@ -1,0 +1,25 @@
+@use "style/_variable" as *;
+
+.fieldStep {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  padding: 0.5rem;
+}
+
+
+.header {
+  display: grid;
+  place-content: center;
+}
+
+.rollResult {
+  padding: 0.5em;
+  text-align: center;
+}
+
+
+.footer {
+  display: grid;
+  place-content: center;
+}

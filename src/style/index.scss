@@ -8,6 +8,12 @@
 html {
   height: 100%;
   font-size: vw(16); // 幅375pxのアートボードで16px相当
+  @media screen and (min-width: 430px) {
+    max-width: 430px;
+    margin: 0 auto;
+    font-size: 18.3467px;
+    background-color: #191f38;
+  }
 }
 
 body {
@@ -21,6 +27,8 @@ body {
     Roboto,
     sans-serif;
   font-size: 1rem; // 幅375pxのアートボードで16px相当
+  color: #191f38;
+  background-color: white;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
