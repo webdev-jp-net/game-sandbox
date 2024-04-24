@@ -29,7 +29,11 @@ export const ProgressBoard: FC<ProgressBoardProps> = ({
 
   return (
     <div className={[styles.progressBoard, ...customClass].join(' ')}>
-      <div className={styles.lap}>{lap + 1}周め</div>
+      <div className={styles.lap}>
+        {lap + 1}周め
+        <br />
+        {currentStep}
+      </div>
       <div className={styles.list}>
         {currentCourse.map((item, index) => {
           const label = index === 0 ? 'S' : index === course.length - 1 ? 'G' : index
@@ -39,6 +43,8 @@ export const ProgressBoard: FC<ProgressBoardProps> = ({
           if (course[11 * lap + index].event?.checkIn === true) itemClass.push(styles[`--checkIn`])
 
           const { x, y } = fieldStepPosition[index]
+
+          const hoge = currentStep === index + 11 * lap
 
           // if (item.empty) return
           // else
