@@ -24,12 +24,12 @@ export const useLoop = () => {
   // コース全体の中のイベント場所
   // [1, 2, 4, 5, 7, 8, 10, 11] を4つのグループに分ける
   const eventTargetAllFlat = [2, 10, 4 + 11, 8 + 11, 1 + 22, 7 + 22, 5 + 33, 11 + 33]
-  const eventTargetAll = [
-    [2, 10],
-    [4, 8],
-    [1, 7],
-    [5, 11],
-  ]
+  // const eventTargetAll = [
+  //   [2, 10],
+  //   [4, 8],
+  //   [1, 7],
+  //   [5, 11],
+  // ]
 
   // コースのステップ数へのチェックポイントを均等に割り当てる
   const setEventTarget = useCallback(() => {

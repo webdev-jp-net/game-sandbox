@@ -12,12 +12,7 @@ type ProgressBoardProps = {
   addClass?: string[]
 }
 
-export const ProgressBoard: FC<ProgressBoardProps> = ({
-  fieldStep,
-  course,
-  currentStep,
-  addClass = [],
-}) => {
+export const ProgressBoard: FC<ProgressBoardProps> = ({ course, currentStep, addClass = [] }) => {
   const customClass = Array.isArray(addClass) ? addClass : [addClass]
   const { fieldStepPosition, lap, currentCourse } = useProgressBoard({
     fieldStep: 11,
@@ -36,15 +31,13 @@ export const ProgressBoard: FC<ProgressBoardProps> = ({
       </div>
       <div className={styles.list}>
         {currentCourse.map((item, index) => {
-          const label = index === 0 ? 'S' : index === course.length - 1 ? 'G' : index
+          // const label = index === 0 ? 'S' : index === course.length - 1 ? 'G' : index
 
           const itemClass = [styles.item]
           if (item.event !== null) itemClass.push(styles[`--event`])
           if (course[11 * lap + index].event?.checkIn === true) itemClass.push(styles[`--checkIn`])
 
           const { x, y } = fieldStepPosition[index]
-
-          const hoge = currentStep === index + 11 * lap
 
           // if (item.empty) return
           // else
