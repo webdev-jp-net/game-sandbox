@@ -140,41 +140,44 @@ export const useDice = ({ canvas }: useDiceParams) => {
   }
 
   const addDiceEvents = (dice: { mesh: THREE.Group; body: CANNON.Body }) => {
-    dice.body.addEventListener('sleep', e => {
-      dice.body.allowSleep = false
+    dice.body.addEventListener(
+      'sleep',
+      (e: { target: { quaternion: { toEuler: (arg0: CANNON.Vec3) => void } } }) => {
+        dice.body.allowSleep = false
 
-      const euler = new CANNON.Vec3()
-      e.target.quaternion.toEuler(euler)
+        const euler = new CANNON.Vec3()
+        e.target.quaternion.toEuler(euler)
 
-      const eps = 0.1
-      const isZero = (angle: number) => Math.abs(angle) < eps
-      const isHalfPi = (angle: number) => Math.abs(angle - 0.5 * Math.PI) < eps
-      const isMinusHalfPi = (angle: number) => Math.abs(0.5 * Math.PI + angle) < eps
-      const isPiOrMinusPi = (angle: number) =>
-        Math.abs(Math.PI - angle) < eps || Math.abs(Math.PI + angle) < eps
+        const eps = 0.1
+        const isZero = (angle: number) => Math.abs(angle) < eps
+        const isHalfPi = (angle: number) => Math.abs(angle - 0.5 * Math.PI) < eps
+        const isMinusHalfPi = (angle: number) => Math.abs(0.5 * Math.PI + angle) < eps
+        const isPiOrMinusPi = (angle: number) =>
+          Math.abs(Math.PI - angle) < eps || Math.abs(Math.PI + angle) < eps
 
-      if (isZero(euler.z)) {
-        if (isZero(euler.x)) {
-          setResult(1)
-        } else if (isHalfPi(euler.x)) {
-          setResult(4)
-        } else if (isMinusHalfPi(euler.x)) {
-          setResult(3)
-        } else if (isPiOrMinusPi(euler.x)) {
-          setResult(6)
+        if (isZero(euler.z)) {
+          if (isZero(euler.x)) {
+            setResult(1)
+          } else if (isHalfPi(euler.x)) {
+            setResult(4)
+          } else if (isMinusHalfPi(euler.x)) {
+            setResult(3)
+          } else if (isPiOrMinusPi(euler.x)) {
+            setResult(6)
+          } else {
+            // landed on edge => wait to fall on side and fire the event again
+            dice.body.allowSleep = true
+          }
+        } else if (isHalfPi(euler.z)) {
+          setResult(2)
+        } else if (isMinusHalfPi(euler.z)) {
+          setResult(5)
         } else {
           // landed on edge => wait to fall on side and fire the event again
           dice.body.allowSleep = true
         }
-      } else if (isHalfPi(euler.z)) {
-        setResult(2)
-      } else if (isMinusHalfPi(euler.z)) {
-        setResult(5)
-      } else {
-        // landed on edge => wait to fall on side and fire the event again
-        dice.body.allowSleep = true
       }
-    })
+    )
   }
 
   const render = () => {
@@ -206,7 +209,7 @@ export const useDice = ({ canvas }: useDiceParams) => {
       d.mesh.position.copy(d.body.position)
 
       d.mesh.rotation.set(2 * Math.PI * Math.random(), 0, 2 * Math.PI * Math.random())
-      d.body.quaternion.copy(d.mesh.quaternion)
+      d.body.quaternion.copy(d.mesh.quaternion as unknown as CANNON.Quaternion)
 
       const force = 3 + 5 * Math.random()
       d.body.applyImpulse(new CANNON.Vec3(-force, force, 0), new CANNON.Vec3(0, 0, 0.2))
