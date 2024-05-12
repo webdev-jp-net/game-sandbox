@@ -113,15 +113,15 @@ export const useDice = ({ canvas }: useDiceParams) => {
     )
     floor.receiveShadow = true
     floor.position.y = -7
-    floor.quaternion.setFromAxisAngle(new THREE.Vector3(-1, 0, 0), Math.PI * 0.5)
+    floor.quaternion.setFromAxisAngle(new CANNON.Vec3(-1, 0, 0), Math.PI * 0.5)
     scene.add(floor)
 
     const floorBody = new CANNON.Body({
       type: CANNON.Body.STATIC,
       shape: new CANNON.Plane(),
     })
-    floorBody.position.copy(floor.position)
-    floorBody.quaternion.copy(floor.quaternion)
+    floorBody.position.copy(floor.position as unknown as CANNON.Vec3)
+    floorBody.quaternion.copy(floor.quaternion as unknown as CANNON.Quaternion)
     physicsWorld?.current?.addBody(floorBody)
   }
 
