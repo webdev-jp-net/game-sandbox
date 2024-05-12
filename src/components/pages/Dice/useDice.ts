@@ -4,6 +4,8 @@ import type { RefObject } from 'react'
 import * as THREE from 'three'
 import * as BufferGeometryUtils from 'three/addons/utils/BufferGeometryUtils.js'
 
+import { notch } from './utils/notch'
+
 interface useDiceParams {
   canvas: RefObject<HTMLCanvasElement> | null
 }
@@ -11,8 +13,6 @@ interface useDiceParams {
 const params = {
   segments: 50,
   edgeRadius: 0.07,
-  notchRadius: 0.15,
-  notchDepth: 0.1,
   showOuterMesh: true,
   showInnerMesh: true,
   showOuterWireFrame: false,
