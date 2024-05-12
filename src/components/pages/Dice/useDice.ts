@@ -1,7 +1,12 @@
 import { useEffect } from 'react'
+import type { RefObject } from 'react'
 
 import * as THREE from 'three'
 import * as BufferGeometryUtils from 'three/addons/utils/BufferGeometryUtils.js'
+
+interface useDiceParams {
+  canvasWrapper: RefObject<HTMLDivElement> | null
+}
 
 const params = {
   segments: 50,
@@ -17,7 +22,7 @@ let boxMaterialOuter: THREE.MeshStandardMaterial,
   boxMaterialOuterWireframe: THREE.MeshNormalMaterial
 let diceMesh: THREE.Group
 
-export const useDice = () => {
+export const useDice = ({ canvasWrapper }: useDiceParams) => {
   const scene = new THREE.Scene()
   const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
   const renderer = new THREE.WebGLRenderer()
@@ -234,6 +239,21 @@ export const useDice = () => {
 
       renderer.dispose() // レンダラーの破棄
       window.removeEventListener('resize', handleResize) // リサイズイベントのリムーブもここに含める
+    }
+  }, [])
+
+  useEffect(() => {
+    if (canvasWrapper === null || !canvasWrapper.current) return
+
+    // 描画領域を定義し、DOM に追加
+    canvasWrapper.current.appendChild(renderer.domElement)
+
+    return () => {
+      // アンマウント時にレンダラーを削除
+      if (canvasWrapper.current) {
+        canvasWrapper.current.removeChild(renderer.domElement)
+        renderer.dispose()
+      }
     }
   }, [])
 
