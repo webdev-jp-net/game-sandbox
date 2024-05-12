@@ -1,0 +1,18 @@
+@use "style/_variable" as *;
+
+.canvas {
+  position: absolute;
+  inset: 0;
+
+  canvas {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover;
+  }
+}
+
+
+
+.result {
+  text-align: center;
+}
