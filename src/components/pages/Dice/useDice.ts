@@ -15,24 +15,25 @@ const params = {
   notchDepth: 0.1,
   showOuterMesh: true,
   showInnerMesh: true,
-  showOuterWireframe: false,
+  showOuterWireFrame: false,
 }
-
-let boxMaterialOuter: THREE.MeshStandardMaterial,
-  boxMaterialOuterWireframe: THREE.MeshNormalMaterial
-let diceMesh: THREE.Group
 
 export const useDice = ({ canvasWrapper }: useDiceParams) => {
   const renderer = useRef<THREE.WebGLRenderer | null>(null)
   const scene = new THREE.Scene()
   const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
 
+  const diceMesh = useRef<THREE.Group | null>(null)
+
+  const boxMaterialOuter = useRef<THREE.MeshStandardMaterial | null>(null)
+  const boxMaterialOuterWireFrame = useRef<THREE.MeshNormalMaterial | null>(null)
+
   // ダイスのMeshを生成
   const createDiceMesh = () => {
-    boxMaterialOuterWireframe = new THREE.MeshNormalMaterial({
+    boxMaterialOuterWireFrame.current = new THREE.MeshNormalMaterial({
       wireframe: true,
     })
-    boxMaterialOuter = new THREE.MeshStandardMaterial({
+    boxMaterialOuter.current = new THREE.MeshStandardMaterial({
       color: 0xeeeeee,
       visible: params.showOuterMesh,
     })
@@ -44,14 +45,14 @@ export const useDice = ({ canvasWrapper }: useDiceParams) => {
       side: THREE.DoubleSide,
     })
 
-    diceMesh = new THREE.Group()
+    diceMesh.current = new THREE.Group()
     const innerMesh = new THREE.Mesh(createInnerGeometry(), boxMaterialInner)
     const outerMesh = new THREE.Mesh(
       createBoxGeometry(),
-      params.showOuterWireframe ? boxMaterialOuterWireframe : boxMaterialOuter
+      params.showOuterWireFrame ? boxMaterialOuterWireFrame.current : boxMaterialOuter.current
     )
-    diceMesh.add(innerMesh, outerMesh)
-    scene.add(diceMesh)
+    diceMesh.current.add(innerMesh, outerMesh)
+    scene.add(diceMesh.current)
   }
 
   // サイコロ面のくぼみを生成
@@ -226,9 +227,11 @@ export const useDice = ({ canvasWrapper }: useDiceParams) => {
     const animate = () => {
       requestAnimationFrame(animate) // アニメーションを繰り返す
 
-      // XY方向に一定の角度を加算
-      diceMesh.rotation.x += 0.01
-      diceMesh.rotation.y += 0.01
+      if (diceMesh.current) {
+        // XY方向に一定の角度を加算
+        diceMesh.current.rotation.x += 0.01
+        diceMesh.current.rotation.y += 0.01
+      }
 
       // シーンとカメラへレンダリング（この設定がなければ画面に何も表示されない）
       renderer.current?.render(scene, camera)
