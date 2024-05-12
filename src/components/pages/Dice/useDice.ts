@@ -1,18 +1,85 @@
 import { useEffect } from 'react'
 
 import * as THREE from 'three'
-import { RoundedBoxGeometry } from 'three-stdlib'
+
+const params = {
+  segments: 50,
+  edgeRadius: 0.07,
+}
 
 export const useDice = () => {
   const scene = new THREE.Scene()
   const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
   const renderer = new THREE.WebGLRenderer()
 
+  // サイコロのジオメトリを生成
   const createDiceGeometry = () => {
     const size = 1 // サイコロのサイズ
-    const roundness = 0.1 // 角の丸み
-    const geometry = new RoundedBoxGeometry(size, size, size, 10, roundness)
-    return geometry
+
+    const boxGeometry = new THREE.BoxGeometry(
+      size,
+      size,
+      size,
+      params.segments,
+      params.segments,
+      params.segments
+    )
+    const positionAttribute = boxGeometry.attributes.position
+
+    for (let i = 0; i < positionAttribute.count; i++) {
+      // 頂点の座標を取得
+      let position = new THREE.Vector3().fromBufferAttribute(positionAttribute, i)
+
+      // ダイスのサイズが1であるため、XYZの座標がすべて0.5に近い頂点が角ということになる
+      const subCubeHalfSize = 0.5 - params.edgeRadius
+
+      // キューブの中心から外に向かうベクトルを生成
+      const subCube = new THREE.Vector3(
+        Math.sign(position.x),
+        Math.sign(position.y),
+        Math.sign(position.z)
+      ).multiplyScalar(subCubeHalfSize)
+      // 頂点がどのサブキューブに属するかを判定
+      const addition = new THREE.Vector3().subVectors(position, subCube)
+
+      // 4箇所の角に近い頂点の座標を修正
+      if (
+        Math.abs(position.x) > subCubeHalfSize &&
+        Math.abs(position.y) > subCubeHalfSize &&
+        Math.abs(position.z) > subCubeHalfSize
+      ) {
+        // position is close to box vertex
+        // 頂点に近い場合は、サブキューブの中心から頂点に向かうベクトルを正規化して、エッジの半径を掛ける
+        addition.normalize().multiplyScalar(params.edgeRadius)
+        position = subCube.add(addition)
+      } else if (Math.abs(position.x) > subCubeHalfSize && Math.abs(position.y) > subCubeHalfSize) {
+        // position is close to box edge that's parallel to Z axis
+        // X軸に平行なエッジに近い場合
+        addition.z = 0
+        addition.normalize().multiplyScalar(params.edgeRadius)
+        position.x = subCube.x + addition.x
+        position.y = subCube.y + addition.y
+      } else if (Math.abs(position.x) > subCubeHalfSize && Math.abs(position.z) > subCubeHalfSize) {
+        // position is close to box edge that's parallel to Y axis
+        // Y軸に平行なエッジに近い場合
+        addition.y = 0
+        addition.normalize().multiplyScalar(params.edgeRadius)
+        position.x = subCube.x + addition.x
+        position.z = subCube.z + addition.z
+      } else if (Math.abs(position.y) > subCubeHalfSize && Math.abs(position.z) > subCubeHalfSize) {
+        // position is close to box edge that's parallel to X axis
+        // Z軸に平行なエッジに近い場合
+        addition.x = 0
+        addition.normalize().multiplyScalar(params.edgeRadius)
+        position.y = subCube.y + addition.y
+        position.z = subCube.z + addition.z
+      }
+
+      // 修正した座標を反映
+      positionAttribute.setXYZ(i, position.x, position.y, position.z)
+    }
+
+    return boxGeometry
   }
 
   useEffect(() => {

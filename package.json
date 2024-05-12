@@ -55,7 +55,6 @@
     "redux": "^4.2.1",
     "redux-persist": "^6.0.0",
     "three": "^0.164.1",
-    "three-stdlib": "^2.29.12",
     "vite-plugin-pwa": "^0.17.4"
   },
   "devDependencies": {
