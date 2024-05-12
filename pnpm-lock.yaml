@@ -29,6 +29,9 @@ dependencies:
   '@uidotdev/usehooks':
     specifier: ^2.4.0
     version: 2.4.1(react-dom@18.2.0)(react@18.2.0)
+  cannon-es:
+    specifier: ^0.20.0
+    version: 0.20.0
   dayjs:
     specifier: ^1.11.10
     version: 1.11.10
@@ -5899,6 +5902,10 @@ packages:
 
   /caniuse-lite@1.0.30001591:
     resolution: {integrity: sha512-PCzRMei/vXjJyL5mJtzNiUCKP59dm8Apqc3PH8gJkMnMXZGox93RbE76jHsmLwmIo6/3nsYIpJtx0O7u5PqFuQ==}
+
+  /cannon-es@0.20.0:
+    resolution: {integrity: sha512-eZhWTZIkFOnMAJOgfXJa9+b3kVlvG+FX4mdkpePev/w/rP5V8NRquGyEozcjPfEoXUlb+p7d9SUcmDSn14prOA==}
+    dev: false
 
   /capital-case@1.0.4:
     resolution: {integrity: sha512-ds37W8CytHgwnhGGTi88pcPyR15qoNkOpYwmMMfnWqqWgESapLqvDx6huFjQ5vqWSn2Z06173XNA7LtMOeUh1A==}

@@ -1,203 +1,32 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { RefObject } from 'react'
 
+import * as CANNON from 'cannon-es'
 import * as THREE from 'three'
-import * as BufferGeometryUtils from 'three/addons/utils/BufferGeometryUtils.js'
 
-import { notch } from './utils/notch'
+import { createDiceMesh } from './utils/dice'
 
 interface useDiceParams {
   canvas: RefObject<HTMLCanvasElement> | null
 }
 
-const params = {
-  segments: 50,
-  edgeRadius: 0.07,
-  showOuterMesh: true,
-  showInnerMesh: true,
-  showOuterWireFrame: false,
-}
-
 export const useDice = ({ canvas }: useDiceParams) => {
+  // サイコロの出目
+  // 結果
+  const [result, setResult] = useState<number>(0)
+
   const renderer = useRef<THREE.WebGLRenderer | null>(null)
   const scene = new THREE.Scene()
-  const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
+  const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 300)
 
-  const diceMesh = useRef<THREE.Group | null>(null)
+  const diceArray = useRef<{ mesh: THREE.Group; body: CANNON.Body }[]>([])
 
-  const boxMaterialOuter = useRef<THREE.MeshStandardMaterial | null>(null)
-  const boxMaterialOuterWireFrame = useRef<THREE.MeshNormalMaterial | null>(null)
-
-  // ダイスのMeshを生成
-  const createDiceMesh = () => {
-    boxMaterialOuterWireFrame.current = new THREE.MeshNormalMaterial({
-      wireframe: true,
-    })
-    boxMaterialOuter.current = new THREE.MeshStandardMaterial({
-      color: 0xeeeeee,
-      visible: params.showOuterMesh,
-    })
-    const boxMaterialInner = new THREE.MeshStandardMaterial({
-      color: 0x000000,
-      roughness: 0,
-      metalness: 1,
-      visible: params.showInnerMesh,
-      side: THREE.DoubleSide,
-    })
-
-    diceMesh.current = new THREE.Group()
-    const innerMesh = new THREE.Mesh(createInnerGeometry(), boxMaterialInner)
-    const outerMesh = new THREE.Mesh(
-      createBoxGeometry(),
-      params.showOuterWireFrame ? boxMaterialOuterWireFrame.current : boxMaterialOuter.current
-    )
-    diceMesh.current.add(innerMesh, outerMesh)
-    scene.add(diceMesh.current)
-  }
-
-  // サイコロ面のくぼみを生成
-  const notchWave = (v: number) => {
-    v = (1 / params.notchRadius) * v
-    v = Math.PI * Math.max(-1, Math.min(1, v))
-    return params.notchDepth * (Math.cos(v) + 1)
-  }
-  const notch = (pos: [number, number]) => notchWave(pos[0]) * notchWave(pos[1])
-
-  // 箱を作成
-  const createBoxGeometry = () => {
-    const size = 1 // サイコロのサイズ
-
-    const boxGeometry = new THREE.BoxGeometry(
-      size,
-      size,
-      size,
-      params.segments,
-      params.segments,
-      params.segments
-    )
-    const positionAttribute = boxGeometry.attributes.position
-
-    for (let i = 0; i < positionAttribute.count; i++) {
-      // 頂点の座標を取得
-      let position = new THREE.Vector3().fromBufferAttribute(positionAttribute, i)
-
-      // ダイスのサイズが1であるため、XYZの座標がすべて0.5に近い頂点が角ということになる
-      const subCubeHalfSize = 0.5 - params.edgeRadius
-
-      // キューブの中心から外に向かうベクトルを生成
-      const subCube = new THREE.Vector3(
-        Math.sign(position.x),
-        Math.sign(position.y),
-        Math.sign(position.z)
-      ).multiplyScalar(subCubeHalfSize)
-      // 頂点がどのサブキューブに属するかを判定
-      const addition = new THREE.Vector3().subVectors(position, subCube)
-
-      // 4箇所の角に近い頂点の座標を修正
-      if (
-        Math.abs(position.x) > subCubeHalfSize &&
-        Math.abs(position.y) > subCubeHalfSize &&
-        Math.abs(position.z) > subCubeHalfSize
-      ) {
-        // position is close to box vertex
-        // 頂点に近い場合は、サブキューブの中心から頂点に向かうベクトルを正規化して、エッジの半径を掛ける
-        addition.normalize().multiplyScalar(params.edgeRadius)
-        position = subCube.add(addition)
-      } else if (Math.abs(position.x) > subCubeHalfSize && Math.abs(position.y) > subCubeHalfSize) {
-        // position is close to box edge that's parallel to Z axis
-        // X軸に平行なエッジに近い場合
-        addition.z = 0
-        addition.normalize().multiplyScalar(params.edgeRadius)
-        position.x = subCube.x + addition.x
-        position.y = subCube.y + addition.y
-      } else if (Math.abs(position.x) > subCubeHalfSize && Math.abs(position.z) > subCubeHalfSize) {
-        // position is close to box edge that's parallel to Y axis
-        // Y軸に平行なエッジに近い場合
-        addition.y = 0
-        addition.normalize().multiplyScalar(params.edgeRadius)
-        position.x = subCube.x + addition.x
-        position.z = subCube.z + addition.z
-      } else if (Math.abs(position.y) > subCubeHalfSize && Math.abs(position.z) > subCubeHalfSize) {
-        // position is close to box edge that's parallel to X axis
-        // Z軸に平行なエッジに近い場合
-        addition.x = 0
-        addition.normalize().multiplyScalar(params.edgeRadius)
-        position.y = subCube.y + addition.y
-        position.z = subCube.z + addition.z
-      }
-
-      const offset = 0.23
-
-      if (position.y === 0.5) {
-        position.y -= notch([position.x, position.z])
-      } else if (position.x === 0.5) {
-        position.x -= notch([position.y + offset, position.z + offset])
-        position.x -= notch([position.y - offset, position.z - offset])
-      } else if (position.z === 0.5) {
-        position.z -= notch([position.x - offset, position.y + offset])
-        position.z -= notch([position.x, position.y])
-        position.z -= notch([position.x + offset, position.y - offset])
-      } else if (position.z === -0.5) {
-        position.z += notch([position.x + offset, position.y + offset])
-        position.z += notch([position.x + offset, position.y - offset])
-        position.z += notch([position.x - offset, position.y + offset])
-        position.z += notch([position.x - offset, position.y - offset])
-      } else if (position.x === -0.5) {
-        position.x += notch([position.y + offset, position.z + offset])
-        position.x += notch([position.y + offset, position.z - offset])
-        position.x += notch([position.y, position.z])
-        position.x += notch([position.y - offset, position.z + offset])
-        position.x += notch([position.y - offset, position.z - offset])
-      } else if (position.y === -0.5) {
-        position.y += notch([position.x + offset, position.z + offset])
-        position.y += notch([position.x + offset, position.z])
-        position.y += notch([position.x + offset, position.z - offset])
-        position.y += notch([position.x - offset, position.z + offset])
-        position.y += notch([position.x - offset, position.z])
-        position.y += notch([position.x - offset, position.z - offset])
-      }
-
-      // 修正した座標を反映
-      positionAttribute.setXYZ(i, position.x, position.y, position.z)
-    }
-
-    return boxGeometry
-  }
-
-  // サイコロ内部に一回り小さいキューブを生成
-  const createInnerGeometry = () => {
-    const baseGeometry = new THREE.PlaneGeometry(
-      1 - 2 * params.edgeRadius,
-      1 - 2 * params.edgeRadius
-    )
-    const offset = 0.48
-    return BufferGeometryUtils.mergeGeometries(
-      [
-        baseGeometry.clone().translate(0, 0, offset),
-        baseGeometry.clone().translate(0, 0, -offset),
-        baseGeometry
-          .clone()
-          .rotateX(0.5 * Math.PI)
-          .translate(0, -offset, 0),
-        baseGeometry
-          .clone()
-          .rotateX(0.5 * Math.PI)
-          .translate(0, offset, 0),
-        baseGeometry
-          .clone()
-          .rotateY(0.5 * Math.PI)
-          .translate(-offset, 0, 0),
-        baseGeometry
-          .clone()
-          .rotateY(0.5 * Math.PI)
-          .translate(offset, 0, 0),
-      ],
-      false
-    )
-  }
+  const physicsWorld = useRef<CANNON.World | null>(null)
 
   // initialized
   useEffect(() => {
+    initPhysics()
+
     if (!canvas?.current) return
     // レンダラーを初期化
     renderer.current = new THREE.WebGLRenderer({
@@ -209,37 +38,37 @@ export const useDice = ({ canvas }: useDiceParams) => {
     renderer.current.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 
     // サイズ調整
-    handleResize()
+    updateSceneSize()
 
     // 環境光源を追加
-    const light = new THREE.AmbientLight(0xffffff)
-    scene.add(light)
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5)
+    scene.add(ambientLight)
 
     // サイコロを照らす光源を追加
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5)
-    directionalLight.position.set(5, 5, 5)
-    scene.add(directionalLight)
+    const topLight = new THREE.PointLight(0xffffff, 0.5)
+    topLight.position.set(10, 15, 0)
+    topLight.castShadow = true
+    topLight.shadow.mapSize.width = 2048
+    topLight.shadow.mapSize.height = 2048
+    topLight.shadow.camera.near = 5
+    topLight.shadow.camera.far = 400
+    scene.add(topLight)
+
+    // 部屋を作る
+    createFloor()
 
     // サイコロを追加
     createDiceMesh()
+    for (let i = 0; i < 1; i++) {
+      diceArray.current.push(createDice())
+      addDiceEvents(diceArray.current[i])
+    }
+
+    throwDice()
+    render()
 
     // カメラの位置を設定
-    camera.position.z = 5
-
-    // アニメーション
-    const animate = () => {
-      requestAnimationFrame(animate) // アニメーションを繰り返す
-
-      if (diceMesh.current) {
-        // XY方向に一定の角度を加算
-        diceMesh.current.rotation.x += 0.01
-        diceMesh.current.rotation.y += 0.01
-      }
-
-      // シーンとカメラへレンダリング（この設定がなければ画面に何も表示されない）
-      renderer.current?.render(scene, camera)
-    }
-    animate()
+    camera.position.set(0, 0, 4).multiplyScalar(7)
 
     // アンマウント時の処理
     return () => {
@@ -255,7 +84,7 @@ export const useDice = ({ canvas }: useDiceParams) => {
       })
 
       renderer?.current?.dispose() // レンダラーの破棄
-      window.removeEventListener('resize', handleResize) // リサイズイベントのリムーブもここに含める
+      window.removeEventListener('resize', updateSceneSize) // リサイズイベントのリムーブもここに含める
 
       // アンマウント時にレンダラーを削除
       if (canvas?.current && renderer.current?.domElement) {
@@ -265,26 +94,139 @@ export const useDice = ({ canvas }: useDiceParams) => {
     }
   }, [])
 
-  // キャンパスのサイズを画面サイズにあわせて変更する
-  const handleResize = () => {
-    renderer.current?.setSize(
-      window.innerWidth * window.devicePixelRatio,
-      window.innerHeight * window.devicePixelRatio
+  //
+  const initPhysics = () => {
+    physicsWorld.current = new CANNON.World({
+      allowSleep: true,
+      gravity: new CANNON.Vec3(0, -50, 0),
+    })
+    physicsWorld.current.defaultContactMaterial.restitution = 0.3
+  }
+
+  // 部屋を作る
+  const createFloor = () => {
+    const floor = new THREE.Mesh(
+      new THREE.PlaneGeometry(1000, 1000),
+      new THREE.ShadowMaterial({
+        opacity: 0.1,
+      })
     )
+    floor.receiveShadow = true
+    floor.position.y = -7
+    floor.quaternion.setFromAxisAngle(new THREE.Vector3(-1, 0, 0), Math.PI * 0.5)
+    scene.add(floor)
+
+    const floorBody = new CANNON.Body({
+      type: CANNON.Body.STATIC,
+      shape: new CANNON.Plane(),
+    })
+    floorBody.position.copy(floor.position)
+    floorBody.quaternion.copy(floor.quaternion)
+    physicsWorld?.current?.addBody(floorBody)
+  }
+
+  const createDice = () => {
+    // サイコロを生成してsceneに追加
+    const mesh = createDiceMesh()
+    scene.add(mesh)
+
+    const body = new CANNON.Body({
+      mass: 1,
+      shape: new CANNON.Box(new CANNON.Vec3(0.5, 0.5, 0.5)),
+      sleepTimeLimit: 0.1,
+    })
+    physicsWorld?.current?.addBody(body)
+    return { mesh, body }
+  }
+
+  const addDiceEvents = (dice: { mesh: THREE.Group; body: CANNON.Body }) => {
+    dice.body.addEventListener('sleep', e => {
+      dice.body.allowSleep = false
+
+      const euler = new CANNON.Vec3()
+      e.target.quaternion.toEuler(euler)
+
+      const eps = 0.1
+      const isZero = (angle: number) => Math.abs(angle) < eps
+      const isHalfPi = (angle: number) => Math.abs(angle - 0.5 * Math.PI) < eps
+      const isMinusHalfPi = (angle: number) => Math.abs(0.5 * Math.PI + angle) < eps
+      const isPiOrMinusPi = (angle: number) =>
+        Math.abs(Math.PI - angle) < eps || Math.abs(Math.PI + angle) < eps
+
+      if (isZero(euler.z)) {
+        if (isZero(euler.x)) {
+          setResult(1)
+        } else if (isHalfPi(euler.x)) {
+          setResult(4)
+        } else if (isMinusHalfPi(euler.x)) {
+          setResult(3)
+        } else if (isPiOrMinusPi(euler.x)) {
+          setResult(6)
+        } else {
+          // landed on edge => wait to fall on side and fire the event again
+          dice.body.allowSleep = true
+        }
+      } else if (isHalfPi(euler.z)) {
+        setResult(2)
+      } else if (isMinusHalfPi(euler.z)) {
+        setResult(5)
+      } else {
+        // landed on edge => wait to fall on side and fire the event again
+        dice.body.allowSleep = true
+      }
+    })
+  }
+
+  const render = () => {
+    physicsWorld?.current?.fixedStep()
+
+    for (const dice of diceArray.current) {
+      dice.mesh.position.copy(dice.body.position)
+      dice.mesh.quaternion.copy(dice.body.quaternion)
+    }
+
+    renderer.current?.render(scene, camera)
+    requestAnimationFrame(render)
+  }
+
+  // ウィンドウリサイズ時に描画エリアのサイズも変更
+  const updateSceneSize = () => {
+    camera.aspect = window.innerWidth / window.innerHeight
     camera.updateProjectionMatrix()
+    renderer?.current?.setSize(window.innerWidth, window.innerHeight)
+  }
+
+  // ダイスをふる
+  const throwDice = () => {
+    diceArray.current.forEach((d, dIdx) => {
+      d.body.velocity.setZero()
+      d.body.angularVelocity.setZero()
+
+      d.body.position = new CANNON.Vec3(6, dIdx * 1.5, 0)
+      d.mesh.position.copy(d.body.position)
+
+      d.mesh.rotation.set(2 * Math.PI * Math.random(), 0, 2 * Math.PI * Math.random())
+      d.body.quaternion.copy(d.mesh.quaternion)
+
+      const force = 3 + 5 * Math.random()
+      d.body.applyImpulse(new CANNON.Vec3(-force, force, 0), new CANNON.Vec3(0, 0, 0.2))
+
+      d.body.allowSleep = true
+    })
   }
 
   useEffect(() => {
     // ウィンドウリサイズでキャンバスのサイズを変更
-    window.addEventListener('resize', handleResize)
+    window.addEventListener('resize', updateSceneSize)
 
     // アンマウントでリスナーを削除
     return () => {
-      window.removeEventListener('resize', handleResize)
+      window.removeEventListener('resize', updateSceneSize)
     }
   }, [renderer, camera]) // 依存関係に renderer と camera を追加
 
   return {
-    renderer,
+    throwDice,
+    result,
   }
 }

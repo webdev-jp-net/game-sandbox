@@ -40,6 +40,7 @@
     "@line/liff-mock": "^1.0.3",
     "@reduxjs/toolkit": "^1.9.5",
     "@uidotdev/usehooks": "^2.4.0",
+    "cannon-es": "^0.20.0",
     "dayjs": "^1.11.10",
     "jsqr": "^1.4.0",
     "modern-css-reset": "^1.4.0",
