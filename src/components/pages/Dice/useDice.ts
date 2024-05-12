@@ -87,6 +87,11 @@ export const useDice = () => {
     const light = new THREE.AmbientLight(0xffffff)
     scene.add(light)
 
+    // サイコロを照らす
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5)
+    directionalLight.position.set(5, 5, 5)
+    scene.add(directionalLight)
+
     // サイコロを追加
     const diceGeometry = createDiceGeometry()
     const material = new THREE.MeshStandardMaterial({ color: 0xffffff })
