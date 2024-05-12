@@ -1,19 +1,64 @@
 import { useEffect } from 'react'
 
 import * as THREE from 'three'
+import * as BufferGeometryUtils from 'three/addons/utils/BufferGeometryUtils.js'
 
 const params = {
   segments: 50,
   edgeRadius: 0.07,
+  notchRadius: 0.15,
+  notchDepth: 0.1,
+  showOuterMesh: true,
+  showInnerMesh: true,
+  showOuterWireframe: false,
 }
+
+let boxMaterialOuter: THREE.MeshStandardMaterial,
+  boxMaterialOuterWireframe: THREE.MeshNormalMaterial
+let diceMesh: THREE.Group
 
 export const useDice = () => {
   const scene = new THREE.Scene()
   const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
   const renderer = new THREE.WebGLRenderer()
 
-  // サイコロのジオメトリを生成
-  const createDiceGeometry = () => {
+  // ダイスのMeshを生成
+  const createDiceMesh = () => {
+    boxMaterialOuterWireframe = new THREE.MeshNormalMaterial({
+      wireframe: true,
+    })
+    boxMaterialOuter = new THREE.MeshStandardMaterial({
+      color: 0xeeeeee,
+      visible: params.showOuterMesh,
+    })
+    const boxMaterialInner = new THREE.MeshStandardMaterial({
+      color: 0x000000,
+      roughness: 0,
+      metalness: 1,
+      visible: params.showInnerMesh,
+      side: THREE.DoubleSide,
+    })
+
+    diceMesh = new THREE.Group()
+    const innerMesh = new THREE.Mesh(createInnerGeometry(), boxMaterialInner)
+    const outerMesh = new THREE.Mesh(
+      createBoxGeometry(),
+      params.showOuterWireframe ? boxMaterialOuterWireframe : boxMaterialOuter
+    )
+    diceMesh.add(innerMesh, outerMesh)
+    scene.add(diceMesh)
+  }
+
+  // サイコロ面のくぼみを生成
+  const notchWave = (v: number) => {
+    v = (1 / params.notchRadius) * v
+    v = Math.PI * Math.max(-1, Math.min(1, v))
+    return params.notchDepth * (Math.cos(v) + 1)
+  }
+  const notch = (pos: [number, number]) => notchWave(pos[0]) * notchWave(pos[1])
+
+  // 箱を作成
+  const createBoxGeometry = () => {
     const size = 1 // サイコロのサイズ
 
     const boxGeometry = new THREE.BoxGeometry(
@@ -75,11 +120,74 @@ export const useDice = () => {
         position.z = subCube.z + addition.z
       }
 
+      const offset = 0.23
+
+      if (position.y === 0.5) {
+        position.y -= notch([position.x, position.z])
+      } else if (position.x === 0.5) {
+        position.x -= notch([position.y + offset, position.z + offset])
+        position.x -= notch([position.y - offset, position.z - offset])
+      } else if (position.z === 0.5) {
+        position.z -= notch([position.x - offset, position.y + offset])
+        position.z -= notch([position.x, position.y])
+        position.z -= notch([position.x + offset, position.y - offset])
+      } else if (position.z === -0.5) {
+        position.z += notch([position.x + offset, position.y + offset])
+        position.z += notch([position.x + offset, position.y - offset])
+        position.z += notch([position.x - offset, position.y + offset])
+        position.z += notch([position.x - offset, position.y - offset])
+      } else if (position.x === -0.5) {
+        position.x += notch([position.y + offset, position.z + offset])
+        position.x += notch([position.y + offset, position.z - offset])
+        position.x += notch([position.y, position.z])
+        position.x += notch([position.y - offset, position.z + offset])
+        position.x += notch([position.y - offset, position.z - offset])
+      } else if (position.y === -0.5) {
+        position.y += notch([position.x + offset, position.z + offset])
+        position.y += notch([position.x + offset, position.z])
+        position.y += notch([position.x + offset, position.z - offset])
+        position.y += notch([position.x - offset, position.z + offset])
+        position.y += notch([position.x - offset, position.z])
+        position.y += notch([position.x - offset, position.z - offset])
+      }
+
       // 修正した座標を反映
       positionAttribute.setXYZ(i, position.x, position.y, position.z)
     }
 
     return boxGeometry
+  }
+
+  // サイコロ内部に一回り小さいキューブを生成
+  const createInnerGeometry = () => {
+    const baseGeometry = new THREE.PlaneGeometry(
+      1 - 2 * params.edgeRadius,
+      1 - 2 * params.edgeRadius
+    )
+    const offset = 0.48
+    return BufferGeometryUtils.mergeGeometries(
+      [
+        baseGeometry.clone().translate(0, 0, offset),
+        baseGeometry.clone().translate(0, 0, -offset),
+        baseGeometry
+          .clone()
+          .rotateX(0.5 * Math.PI)
+          .translate(0, -offset, 0),
+        baseGeometry
+          .clone()
+          .rotateX(0.5 * Math.PI)
+          .translate(0, offset, 0),
+        baseGeometry
+          .clone()
+          .rotateY(0.5 * Math.PI)
+          .translate(-offset, 0, 0),
+        baseGeometry
+          .clone()
+          .rotateY(0.5 * Math.PI)
+          .translate(offset, 0, 0),
+      ],
+      false
+    )
   }
 
   useEffect(() => {
@@ -93,10 +201,7 @@ export const useDice = () => {
     scene.add(directionalLight)
 
     // サイコロを追加
-    const diceGeometry = createDiceGeometry()
-    const material = new THREE.MeshStandardMaterial({ color: 0xffffff })
-    const diceMesh = new THREE.Mesh(diceGeometry, material)
-    scene.add(diceMesh)
+    createDiceMesh()
 
     // カメラの位置を設定
     camera.position.z = 5
