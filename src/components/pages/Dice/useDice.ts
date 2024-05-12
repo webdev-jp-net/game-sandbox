@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import type { RefObject } from 'react'
 
 import * as THREE from 'three'
@@ -23,9 +23,9 @@ let boxMaterialOuter: THREE.MeshStandardMaterial,
 let diceMesh: THREE.Group
 
 export const useDice = ({ canvasWrapper }: useDiceParams) => {
+  const renderer = useRef<THREE.WebGLRenderer | null>(null)
   const scene = new THREE.Scene()
   const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
-  const renderer = new THREE.WebGLRenderer()
 
   // ダイスのMeshを生成
   const createDiceMesh = () => {
@@ -195,12 +195,23 @@ export const useDice = ({ canvasWrapper }: useDiceParams) => {
     )
   }
 
+  // initialized
   useEffect(() => {
+    // レンダラーを初期化
+    renderer.current = new THREE.WebGLRenderer()
+
+    // 描画領域を定義し、DOM に追加
+    if (canvasWrapper?.current === null) return
+    canvasWrapper?.current.appendChild(renderer.current?.domElement)
+
+    // サイズ調整
+    handleResize()
+
     // 環境光源を追加
     const light = new THREE.AmbientLight(0xffffff)
     scene.add(light)
 
-    // サイコロを照らす
+    // サイコロを照らす光源を追加
     const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5)
     directionalLight.position.set(5, 5, 5)
     scene.add(directionalLight)
@@ -220,11 +231,11 @@ export const useDice = ({ canvasWrapper }: useDiceParams) => {
       diceMesh.rotation.y += 0.01
 
       // シーンとカメラへレンダリング（この設定がなければ画面に何も表示されない）
-      renderer.render(scene, camera)
+      renderer.current?.render(scene, camera)
     }
-
     animate()
 
+    // アンマウント時の処理
     return () => {
       // オブジェクトの削除
       scene.children.forEach(child => {
@@ -237,38 +248,31 @@ export const useDice = ({ canvasWrapper }: useDiceParams) => {
         }
       })
 
-      renderer.dispose() // レンダラーの破棄
+      renderer?.current?.dispose() // レンダラーの破棄
       window.removeEventListener('resize', handleResize) // リサイズイベントのリムーブもここに含める
-    }
-  }, [])
 
-  useEffect(() => {
-    if (canvasWrapper === null || !canvasWrapper.current) return
-
-    // 描画領域を定義し、DOM に追加
-    canvasWrapper.current.appendChild(renderer.domElement)
-
-    return () => {
       // アンマウント時にレンダラーを削除
-      if (canvasWrapper.current) {
-        canvasWrapper.current.removeChild(renderer.domElement)
-        renderer.dispose()
+      if (canvasWrapper?.current && renderer.current?.domElement) {
+        canvasWrapper?.current.removeChild(renderer.current.domElement)
+        renderer.current?.dispose()
       }
     }
-  }, [])
+  }, [renderer.current])
 
   // キャンパスのサイズを画面サイズにあわせて変更する
   const handleResize = () => {
-    renderer.setSize(
+    renderer.current?.setSize(
       window.innerWidth * window.devicePixelRatio,
       window.innerHeight * window.devicePixelRatio
     )
     camera.updateProjectionMatrix()
   }
-  useEffect(() => {
-    window.addEventListener('resize', handleResize)
-    handleResize()
 
+  useEffect(() => {
+    // ウィンドウリサイズでキャンバスのサイズを変更
+    window.addEventListener('resize', handleResize)
+
+    // アンマウントでリスナーを削除
     return () => {
       window.removeEventListener('resize', handleResize)
     }
