@@ -5,7 +5,7 @@ import * as THREE from 'three'
 import * as BufferGeometryUtils from 'three/addons/utils/BufferGeometryUtils.js'
 
 interface useDiceParams {
-  canvasWrapper: RefObject<HTMLDivElement> | null
+  canvas: RefObject<HTMLCanvasElement> | null
 }
 
 const params = {
@@ -18,7 +18,7 @@ const params = {
   showOuterWireFrame: false,
 }
 
-export const useDice = ({ canvasWrapper }: useDiceParams) => {
+export const useDice = ({ canvas }: useDiceParams) => {
   const renderer = useRef<THREE.WebGLRenderer | null>(null)
   const scene = new THREE.Scene()
   const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
@@ -198,12 +198,15 @@ export const useDice = ({ canvasWrapper }: useDiceParams) => {
 
   // initialized
   useEffect(() => {
+    if (!canvas?.current) return
     // レンダラーを初期化
-    renderer.current = new THREE.WebGLRenderer()
-
-    // 描画領域を定義し、DOM に追加
-    if (canvasWrapper?.current === null) return
-    canvasWrapper?.current.appendChild(renderer.current?.domElement)
+    renderer.current = new THREE.WebGLRenderer({
+      alpha: true,
+      antialias: true,
+      canvas: canvas?.current,
+    })
+    renderer.current.shadowMap.enabled = true
+    renderer.current.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 
     // サイズ調整
     handleResize()
@@ -255,12 +258,12 @@ export const useDice = ({ canvasWrapper }: useDiceParams) => {
       window.removeEventListener('resize', handleResize) // リサイズイベントのリムーブもここに含める
 
       // アンマウント時にレンダラーを削除
-      if (canvasWrapper?.current && renderer.current?.domElement) {
-        canvasWrapper?.current.removeChild(renderer.current.domElement)
+      if (canvas?.current && renderer.current?.domElement) {
+        canvas?.current.removeChild(renderer.current.domElement)
         renderer.current?.dispose()
       }
     }
-  }, [renderer.current])
+  }, [])
 
   // キャンパスのサイズを画面サイズにあわせて変更する
   const handleResize = () => {
