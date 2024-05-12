@@ -32,6 +32,9 @@ export const Home: FC = () => {
         <p className={styles.paragraph}>
           <Link to="/loop">周回すごろく</Link>
         </p>
+        <p className={styles.paragraph}>
+          <Link to="/dice">ダイス</Link>
+        </p>
       </div>
     </div>
   )
